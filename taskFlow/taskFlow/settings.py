@@ -102,6 +102,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# https://stackoverflow.com/questions/49189402/auth-user-groups-fields-e304-reverse-accessor-for-user-groups-clashes-with
+AUTH_USER_MODEL = 'tasks.User'
+
+# https://stackoverflow.com/questions/3578882/how-to-specify-the-login-required-redirect-url-in-django
+LOGIN_URL='login'
+LOGIN_REDIRECT_URL='login'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
