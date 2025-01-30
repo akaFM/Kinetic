@@ -9,3 +9,6 @@ class TaskForm(forms.ModelForm): # used to create a new task
     class Meta:
         model = Task
         fields = ['description', 'type', 'urgency', 'due_date']
+        widgets = {
+            'due_date': forms.DateInput(attrs={'type': 'date'})
+        }

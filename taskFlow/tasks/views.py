@@ -74,7 +74,7 @@ def logout(request):
 @login_required()
 def create_task(request):
     
-    # POST req
+    # POST req (data being submitted to create_task route)
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -85,7 +85,7 @@ def create_task(request):
     else:
         # defining the form
         form = TaskForm()
-        # GET req
+        # GET req (form being rendered)
         
     return render(request, "tasks/create_task.html", {
         "form": form
