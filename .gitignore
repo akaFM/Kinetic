@@ -1,4 +1,4 @@
-env
+.venv
 .env
 __pycache__/
 *.pyc
@@ -8,5 +8,3 @@ db.sqlite3
 .vscode/
 .idea/
 .DS_Store
-EntityRelationshipDiagramGenerator.py
-diagram.png
