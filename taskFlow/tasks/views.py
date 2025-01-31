@@ -28,7 +28,7 @@ def index(request):
     startDate = today.replace(day=1)
     endDate = startDate.replace(day=monthrange(startDate.year, startDate.month)[1])
 
-    tasksToShow = Task.objects.filter(due_date__range=(startDate, endDate))
+    tasksToShow = Task.objects.filter(due_date__range=(startDate, endDate), user=request.user)
     taskList = [[] for _ in range(monthrange(startDate.year, startDate.month)[1])]
     
     for task in tasksToShow:
