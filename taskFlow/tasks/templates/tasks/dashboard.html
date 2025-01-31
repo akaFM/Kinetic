@@ -1,11 +1,11 @@
 {% extends "tasks/base.html" %}
 
 {% block body %}
-<h1>{{renderDate}}</h1>
 <form method="POST">
     {% csrf_token %}
     {{ form }}
     <button type="submit">Submit</button>
 </form>
+{{ taskList }}
 
 {% endblock %}

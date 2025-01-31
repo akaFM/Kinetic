@@ -28,11 +28,14 @@ def index(request):
     startDate = today.replace(day=1)
     endDate = startDate.replace(day=monthrange(startDate.year, startDate.month)[1])
 
-    # TODO get all tasks witin that date range
-    # TODO sort them into a list with endDate.day number of sublists (for ease of frontend)
-
+    tasksToShow = Task.objects.filter(due_date__range=(startDate, endDate))
+    taskList = [[] for _ in range(monthrange(startDate.year, startDate.month)[1])]
+    
+    for task in tasksToShow:
+        taskList[task.due_date.day - 1].append(task)
+    
     return render(request, "tasks/dashboard.html", {
-        "renderDate": str(startDate) + ' NIGGA ' + str(endDate),
+        "taskList": taskList,
         "form": calendarChoice(),
     })
 
