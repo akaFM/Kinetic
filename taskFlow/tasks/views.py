@@ -8,6 +8,8 @@ from .forms import *
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import check_password
+from datetime import date, datetime
+from calendar import monthrange
 
 # https://stackoverflow.com/questions/17873855/manager-isnt-available-user-has-been-swapped-for-pet-person
 from django.contrib.auth import get_user_model
@@ -15,7 +17,24 @@ User = get_user_model()
 
 @login_required()
 def index(request):
-    return render(request, "tasks/dashboard.html", {})
+    today = None
+
+    if request.method == "POST":
+        today = datetime.strptime(request.POST["date"], "%Y-%m-%d").date()
+
+    if not today:
+        today = date.today() # if user and server are in a unqiue timezone, we get a OBO for displayed month and possibly year
+    
+    startDate = today.replace(day=1)
+    endDate = startDate.replace(day=monthrange(startDate.year, startDate.month)[1])
+
+    # TODO get all tasks witin that date range
+    # TODO sort them into a list with endDate.day number of sublists (for ease of frontend)
+
+    return render(request, "tasks/dashboard.html", {
+        "renderDate": str(startDate) + ' NIGGA ' + str(endDate),
+        "form": calendarChoice(),
+    })
 
 
 def login(request):
