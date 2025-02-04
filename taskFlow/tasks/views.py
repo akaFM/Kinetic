@@ -18,12 +18,13 @@ User = get_user_model()
 @login_required()
 def index(request):
     today = None
+    realToday = date.today()
 
     if request.method == "POST":
         today = datetime.strptime(request.POST["date"], "%Y-%m-%d").date()
 
     if not today:
-        today = date.today() # if user and server are in a unqiue timezone, we get a OBO for displayed month and possibly year
+        today = realToday # if user and server are in a unqiue timezone, we get a OBO for displayed month and possibly year
     
     startDate = today.replace(day=1)
     endDate = startDate.replace(day=monthrange(startDate.year, startDate.month)[1])
@@ -36,6 +37,9 @@ def index(request):
     
     return render(request, "tasks/dashboard.html", {
         "taskList": taskList,
+        "month": today.month,
+        "year": today.year,
+        "currDay": realToday.day if startDate.month == realToday.month and startDate.year == realToday.year else -1, 
         "form": calendarChoice(),
     })
 
