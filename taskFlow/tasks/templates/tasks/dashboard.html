@@ -1,5 +1,12 @@
 {% extends "tasks/base.html" %}
 
 {% block body %}
-<h1>TODO</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Submit</button>
+</form>
+<h1>{{currDay}} {{month}} {{year}}</h1>
+{{ taskList }}
+
 {% endblock %}
