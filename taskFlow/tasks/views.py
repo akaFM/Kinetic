@@ -8,6 +8,8 @@ from .forms import *
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import check_password
+from datetime import date, datetime
+from calendar import monthrange
 
 # https://stackoverflow.com/questions/17873855/manager-isnt-available-user-has-been-swapped-for-pet-person
 from django.contrib.auth import get_user_model
@@ -15,7 +17,31 @@ User = get_user_model()
 
 @login_required()
 def index(request):
-    return render(request, "tasks/dashboard.html", {})
+    today = None
+    realToday = date.today()
+
+    if request.method == "POST":
+        today = datetime.strptime(request.POST["date"], "%Y-%m-%d").date()
+
+    if not today:
+        today = realToday # if user and server are in a unqiue timezone, we get a OBO for displayed month and possibly year
+    
+    startDate = today.replace(day=1)
+    endDate = startDate.replace(day=monthrange(startDate.year, startDate.month)[1])
+
+    tasksToShow = Task.objects.filter(due_date__range=(startDate, endDate), user=request.user)
+    taskList = [[] for _ in range(monthrange(startDate.year, startDate.month)[1])]
+    
+    for task in tasksToShow:
+        taskList[task.due_date.day - 1].append(task)
+    
+    return render(request, "tasks/dashboard.html", {
+        "taskList": taskList,
+        "month": today.month,
+        "year": today.year,
+        "currDay": realToday.day if startDate.month == realToday.month and startDate.year == realToday.year else -1, 
+        "form": calendarChoice(),
+    })
 
 
 def login(request):
