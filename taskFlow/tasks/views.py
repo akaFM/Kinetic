@@ -64,9 +64,29 @@ def login(request):
 
     return render(request, "tasks/login.html", {
         "form": regsiterLogin(),
-        "msg": "Enter your login credentials. If you don’t have an account, one will be created automatically."
+        "msg": "Enter your login credentials. If you don't have an account, one will be created automatically."
     })
 
 def logout(request):
     django.contrib.auth.logout(request)
     return HttpResponseRedirect(reverse("index"))
+
+@login_required()
+def create_task(request):
+    
+    # POST req
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
+            return HttpResponseRedirect(reverse("index"))
+    else:
+        # defining the form
+        form = TaskForm()
+        # GET req
+        
+    return render(request, "tasks/create_task.html", {
+        "form": form
+    })
