@@ -18,8 +18,8 @@ class Task(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # pk - id
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")  # fk - user
     description = models.TextField(default="A very important task.") 
-    type = models.CharField(max_length=20, choices=TaskType.choices, default=TaskType.OTHER) # default - OTHER
-    urgency = models.IntegerField(default=3)  # 1 (most urgent) to 5 (least urgent)
-    due_date = models.DateField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    completed = models.BooleanField(default=False)
+    type = models.CharField(max_length=20, choices=TaskType.choices, default=TaskType.OTHER) # default - OTHER (filterable)
+    urgency = models.IntegerField(default=3)  # 1 (most urgent) to 5 (least urgent) (filterable)
+    due_date = models.DateField() # filterable
+    created_at = models.DateTimeField(auto_now_add=True) # filterable
+    completed = models.BooleanField(default=False) # filterable
