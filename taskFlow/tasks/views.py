@@ -23,11 +23,14 @@ def index(request):
 
     if request.method == "POST":
         if "date" in request.POST:
-            today = datetime.strptime(request.POST["date"], "%Y-%m-%d").date()
+            try:
+                today = datetime.strptime(request.POST["date"], "%Y-%m-%d").date()
+            except ValueError:
+                pass 
         if "category" in request.POST:
             category = request.POST["category"]
             if category not in Task.TaskType.values: # if the user is a bastard
-                category = None
+                pass
 
     if not today:
         today = realToday # if user and server are in a unqiue timezone, we get a OBO for displayed month and possibly year
