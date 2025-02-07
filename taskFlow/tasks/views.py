@@ -17,11 +17,17 @@ User = get_user_model()
 
 @login_required()
 def index(request):
+    category = None
     today = None
     realToday = date.today()
 
     if request.method == "POST":
-        today = datetime.strptime(request.POST["date"], "%Y-%m-%d").date()
+        if "date" in request.POST:
+            today = datetime.strptime(request.POST["date"], "%Y-%m-%d").date()
+        if "category" in request.POST:
+            category = request.POST["category"]
+            if category not in Task.TaskType.values: # if the user is a bastard
+                category = None
 
     if not today:
         today = realToday # if user and server are in a unqiue timezone, we get a OBO for displayed month and possibly year
@@ -30,6 +36,8 @@ def index(request):
     endDate = startDate.replace(day=monthrange(startDate.year, startDate.month)[1])
 
     tasksToShow = Task.objects.filter(due_date__range=(startDate, endDate), user=request.user)
+    if category:
+        tasksToShow = tasksToShow.filter(type=category)
     taskList = [[] for _ in range(monthrange(startDate.year, startDate.month)[1])]
     
     for task in tasksToShow:
@@ -37,10 +45,12 @@ def index(request):
     
     return render(request, "tasks/dashboard.html", {
         "taskList": taskList,
+        "category": category if category else "All Tasks",
         "month": today.month,
         "year": today.year,
         "currDay": realToday.day if startDate.month == realToday.month and startDate.year == realToday.year else -1, 
-        "form": calendarChoice(),
+        "calendarForm": calendarChoice(),
+        "categoryForm": categoryChoice(),
     })
 
 
