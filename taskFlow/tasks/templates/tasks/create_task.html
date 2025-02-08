@@ -1,8 +1,11 @@
-{# Placeholder html for task creation - avo #}
+{% extends "tasks/base.html" %}
+{% load static %}
 
+{% block head %}
+        <link rel="stylesheet" type="text/css" href="{% static 'tasks/create_task.css' %}">
+{% endblock %}
 
-
-{% extends 'tasks/base.html' %}
+{% block title %}Create Task{% endblock %}
 
 {% block body %}
 <h2>Create New Task</h2>
