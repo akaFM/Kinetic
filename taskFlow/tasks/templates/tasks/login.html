@@ -8,7 +8,7 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
-<form action="/login" method="post" class="login-form" id="loginForm"></form>
+<form action="{% url 'login' %}" method="post" class="login-form" id="loginForm"></form>
     {% csrf_token %}
     <div class="message">{{ msg }}</div>
     <div class="form-content">
