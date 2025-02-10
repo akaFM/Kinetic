@@ -1,0 +1,61 @@
+/* tasks/static/tasks/styles.css */
+:root {
+    --accent-color: #4a90e2;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+}
+
+.auth-box {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25);
+}
+
+.auth-message {
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    transition: all 0.3s ease;
+}
+
+.auth-message.error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control::placeholder {
+    color: #adb5bd;
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .auth-box {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+    
+    .login-header h2 {
+        font-size: 1.5rem;
+    }
+}

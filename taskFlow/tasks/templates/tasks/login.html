@@ -2,18 +2,39 @@
 {% load static %}
 
 {% block head %}
-        <link rel="stylesheet" type="text/css" href="{% static 'tasks/login.css' %}">
+    <link rel="stylesheet" href="{% static 'tasks/login.css' %}">
+    <script defer src="{% static 'tasks/login.js' %}"></script>
 {% endblock %}
 
 {% block title %}Login{% endblock %}
 
 {% block body %}
-<form action="{% url 'login' %}" method="post" class="login-form" id="loginForm"></form>
-    {% csrf_token %}
-    <div class="message">{{ msg }}</div>
-    <div class="form-content">
-        {{ form }}
+<div class="auth-container">
+    <div class="auth-box">
+        <form action="{% url 'login' %}" method="post" class="p-4">
+            {% csrf_token %}
+            <div class="login-header">
+                <h2 class="mb-3">Register/Login</h2>
+                {% if msg %}
+                <div class="auth-message" id="authMessage">{{ msg }}</div>
+                {% endif %}
+            </div>
+
+            {% for field in form %}
+                <div class="input-group">
+                    <label for="{{ field.id_for_label }}" class="form-label">
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ field.errors|first }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn login-submit w-100">Sign In</button>
+        </form>
     </div>
-    <input type="submit" value="Submit" class="login-submit">
-</form>
+</div>
 {% endblock %}
