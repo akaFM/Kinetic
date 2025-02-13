@@ -11,7 +11,18 @@
     <input type="submit" value="Create Task" />
 </form>
 <h1>{{currDay}} {{month}} {{year}}</h1>
-<h2>{{category}}</h2>
-{{ taskList }}
-
+<h2>{{category}}</h2>                            
+{% for day in taskList %}
+    {% for task in day %}
+        <div class="task">
+            <p>--------------------------------</p>
+            <p>Description: {{ task.get_description }}</p>
+            <p>Type: {{ task.get_type }}</p>
+            <p>Urgency: {{ task.get_urgency }}</p>
+            <p>Due: {{ task.due_date }}</p>
+            <p>Completed: {{ task.completed }}</p>
+            <p>--------------------------------</p>
+        </div>
+    {% endfor %}
+{% endfor %}
 {% endblock %}
