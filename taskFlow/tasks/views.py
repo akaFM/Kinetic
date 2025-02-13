@@ -104,7 +104,6 @@ def create_task(request):
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
-
             is_recurring = form.cleaned_data['is_recurring']
             
             if is_recurring:
@@ -135,9 +134,6 @@ def create_task(request):
                     # recurring pattern object
                     Task.objects.create(
                         user=request.user,
-                        description=pattern.description,
-                        type=pattern.type,
-                        urgency=pattern.urgency,
                         due_date=current_date,
                         recurring_pattern=pattern
                     )
@@ -148,7 +144,6 @@ def create_task(request):
                     elif pattern.repetition_period == RecurringPattern.RepetitionPeriod.WEEKLY:
                         current_date += timedelta(weeks=1)
                     elif pattern.repetition_period == RecurringPattern.RepetitionPeriod.MONTHLY:
-                        # add month
                         if current_date.month == 12:
                             current_date = current_date.replace(year=current_date.year + 1, month=1)
                         else:
@@ -156,10 +151,14 @@ def create_task(request):
                     else:  # yearly 
                         current_date = current_date.replace(year=current_date.year + 1)
             else:
-                #  task is nonrepetitious- just create the object
-                task = form.save(commit=False)
-                task.user = request.user
-                task.save()
+                # create a non-recurring task
+                task = Task.objects.create(
+                    user=request.user,
+                    description=form.cleaned_data['description'],
+                    type=form.cleaned_data['type'],
+                    urgency=form.cleaned_data['urgency'],
+                    due_date=form.cleaned_data['due_date']
+                )
                 
             return HttpResponseRedirect(reverse("index"))
     else:

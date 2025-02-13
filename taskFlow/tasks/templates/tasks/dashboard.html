@@ -7,6 +7,15 @@
     <button type="submit">Submit</button>
 </form>
 <h1>{{currDay}} {{month}} {{year}}</h1>
-{{ taskList }}
-
+{% for day in taskList %}
+    {% for task in day %}
+        <div class="task">
+            <p>Description: {{ task.get_description }}</p>
+            <p>Type: {{ task.get_type }}</p>
+            <p>Urgency: {{ task.get_urgency }}</p>
+            <p>Due: {{ task.due_date }}</p>
+            <p>Completed: {{ task.completed }}</p>
+        </div>
+    {% endfor %}
+{% endfor %}
 {% endblock %}

@@ -31,23 +31,26 @@ class RecurringPattern(models.Model):
 
 class Task(models.Model):
     """ task model """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # pk - id
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")  # fk - user
-    description = models.TextField(default="A very important task.") 
-    type = models.CharField(max_length=20, choices=TaskType.choices, default=TaskType.OTHER) # default - OTHER (filterable)
-    urgency = models.IntegerField(default=3)  # 1 (most urgent) to 5 (least urgent) (filterable)
-    due_date = models.DateField() # filterable
-    created_at = models.DateTimeField(auto_now_add=True) # filterable
-    completed = models.BooleanField(default=False) # filterable
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
+    due_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    completed = models.BooleanField(default=False)
     recurring_pattern = models.ForeignKey(RecurringPattern, on_delete=models.CASCADE, null=True, blank=True, related_name="instances")
     
-    # Recurring task fields
-    is_recurring = models.BooleanField(default=False)
-    repetition_period = models.CharField(
-        max_length=20,
-        choices=TaskType.choices,
-        null=True,
-        blank=True
-    )
-    start_interval = models.DateField(null=True, blank=True)
-    end_interval = models.DateField(null=True, blank=True)
+    # Only for non-recurring tasks
+    description = models.TextField(null=True, blank=True)
+    type = models.CharField(max_length=20, choices=TaskType.choices, null=True, blank=True)
+    urgency = models.IntegerField(null=True, blank=True)
+
+    @property
+    def get_description(self):
+        return self.recurring_pattern.description if self.recurring_pattern else self.description
+        
+    @property
+    def get_type(self):
+        return self.recurring_pattern.type if self.recurring_pattern else self.type
+        
+    @property
+    def get_urgency(self):
+        return self.recurring_pattern.urgency if self.recurring_pattern else self.urgency
