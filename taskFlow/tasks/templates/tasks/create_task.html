@@ -11,9 +11,18 @@ function toggleRecurringFields() {
     const isRecurring = document.getElementById('id_is_recurring').checked;
     const recurringFields = document.getElementById('recurring-fields');
     const dueDateField = document.getElementById('due-date-field');
+    const dueDateInput = document.getElementById('id_due_date');
     
     recurringFields.style.display = isRecurring ? 'block' : 'none';
     dueDateField.style.display = isRecurring ? 'none' : 'block';
+    
+    // due date not expected from backend for recurring tasks,
+    // so we remove the "required" attribute
+    if (isRecurring) {
+        dueDateInput.removeAttribute('required');
+    } else {
+        dueDateInput.setAttribute('required', 'required');
+    }
 }
 </script>
 {% endblock %}
