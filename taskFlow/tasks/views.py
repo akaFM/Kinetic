@@ -17,11 +17,20 @@ User = get_user_model()
 
 @login_required()
 def index(request):
+    category = None
     today = None
     realToday = date.today()
 
     if request.method == "POST":
-        today = datetime.strptime(request.POST["date"], "%Y-%m-%d").date()
+        if "date" in request.POST:
+            try:
+                today = datetime.strptime(request.POST["date"], "%Y-%m-%d").date()
+            except ValueError:
+                pass 
+        if "category" in request.POST:
+            category = request.POST["category"]
+            if category not in Task.TaskType.values: # if the user is a bastard
+                pass
 
     if not today:
         today = realToday # if user and server are in a unqiue timezone, we get a OBO for displayed month and possibly year
@@ -30,6 +39,8 @@ def index(request):
     endDate = startDate.replace(day=monthrange(startDate.year, startDate.month)[1])
 
     tasksToShow = Task.objects.filter(due_date__range=(startDate, endDate), user=request.user)
+    if category:
+        tasksToShow = tasksToShow.filter(type=category)
     taskList = [[] for _ in range(monthrange(startDate.year, startDate.month)[1])]
     
     for task in tasksToShow:
@@ -37,10 +48,12 @@ def index(request):
     
     return render(request, "tasks/dashboard.html", {
         "taskList": taskList,
+        "category": category if category else "All Tasks",
         "month": today.month,
         "year": today.year,
         "currDay": realToday.day if startDate.month == realToday.month and startDate.year == realToday.year else -1, 
-        "form": calendarChoice(),
+        "calendarForm": calendarChoice(),
+        "categoryForm": categoryChoice(),
     })
 
 
@@ -100,7 +113,7 @@ def logout(request):
 @login_required()
 def create_task(request):
     
-    # POST req
+    # POST req (data being submitted to create_task route)
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -111,7 +124,7 @@ def create_task(request):
     else:
         # defining the form
         form = TaskForm()
-        # GET req
+        # GET req (form being rendered)
         
     return render(request, "tasks/create_task.html", {
         "form": form

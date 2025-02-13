@@ -10,8 +10,13 @@ class TaskForm(forms.ModelForm): # used to create a new task
     class Meta:
         model = Task
         fields = ['description', 'type', 'urgency', 'due_date']
-
+        widgets = {
+            'due_date': forms.DateInput(attrs={'type': 'date'})
+        }
 
 class calendarChoice(forms.Form):
-    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
 
+
+class categoryChoice(forms.Form):
+    category = forms.ChoiceField(choices=[('', 'Select')] + list(Task.TaskType.choices), widget=forms.Select(), required=False)
