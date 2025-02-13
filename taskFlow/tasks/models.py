@@ -6,8 +6,6 @@ class User(AbstractUser):
     """ inherits from AbstractUser, provided by Django """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # pk - id
 
-
-
 class Task(models.Model):
     """ task model """
     class TaskType(models.TextChoices):

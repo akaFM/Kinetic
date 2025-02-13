@@ -99,13 +99,18 @@ def logout(request):
 
 @login_required()
 def create_task(request):
+    
+    # POST req (data being submitted to create_task route)
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
+
             is_recurring = form.cleaned_data['is_recurring']
             
             if is_recurring:
-                # Create recurring pattern
+
+                # only in this case do we create a recurring pattern object
+                # otherwise, the task is one-time, so there isnt a point
                 pattern = RecurringPattern.objects.create(
                     user=request.user,
                     description=form.cleaned_data['description'],
@@ -115,10 +120,19 @@ def create_task(request):
                     start_date=form.cleaned_data['start_date'],
                     end_date=form.cleaned_data['end_date']
                 )
+
+                # TODO: somewhere in this route, implement a backend check to limit the end date- 
+                # the user shouldnt be able to make the end date more than 5 years away or something like that
                 
-                # Create task instances
+                # now, we create a different task object until the end date
+                # for now im using a less efficient data design, but will refine this soon to avoid
+                # redundant rows
                 current_date = pattern.start_date
-                while current_date <= pattern.end_date:
+                while current_date <= pattern.end_date: # this will keep tasks from being created past the end date
+                    
+                    # as of right now, the task object has a bunch of repetitive info that repeatedly
+                    # gets entered into the table, but this will be fixed with a M:1 relationship with the
+                    # recurring pattern object
                     Task.objects.create(
                         user=request.user,
                         description=pattern.description,
@@ -128,28 +142,31 @@ def create_task(request):
                         recurring_pattern=pattern
                     )
                     
-                    # Calculate next date based on repetition period
+                    # calculate next date based on repetition period
                     if pattern.repetition_period == RecurringPattern.RepetitionPeriod.DAILY:
                         current_date += timedelta(days=1)
                     elif pattern.repetition_period == RecurringPattern.RepetitionPeriod.WEEKLY:
                         current_date += timedelta(weeks=1)
                     elif pattern.repetition_period == RecurringPattern.RepetitionPeriod.MONTHLY:
-                        # Add one month
+                        # add month
                         if current_date.month == 12:
                             current_date = current_date.replace(year=current_date.year + 1, month=1)
                         else:
                             current_date = current_date.replace(month=current_date.month + 1)
-                    else:  # Yearly
+                    else:  # yearly 
                         current_date = current_date.replace(year=current_date.year + 1)
             else:
-                # Create single task
+                #  task is nonrepetitious- just create the object
                 task = form.save(commit=False)
                 task.user = request.user
                 task.save()
                 
             return HttpResponseRedirect(reverse("index"))
     else:
+
+        # defining the form
         form = TaskForm()
+        # GET req (form being rendered)
         
     return render(request, "tasks/create_task.html", {
         "form": form
