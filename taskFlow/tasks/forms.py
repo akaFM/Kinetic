@@ -56,4 +56,4 @@ class calendarChoice(forms.Form):
 
 
 class categoryChoice(forms.Form):
-    category = forms.ChoiceField(choices=[('', 'All Tasks')] + list(Task.TaskType.choices), widget=forms.Select(attrs={'class': 'form-select'}), required=False)
+    category = forms.ChoiceField(choices=[('', 'All Tasks')] + list(TaskType.choices), widget=forms.Select(attrs={'class': 'form-select'}), required=False)

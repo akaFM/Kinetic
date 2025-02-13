@@ -30,7 +30,7 @@ def index(request):
                 pass 
         if "category" in request.POST:
             category = request.POST["category"]
-            if category not in Task.TaskType.values: # if the user is a bastard
+            if category not in TaskType.values: # if the user is a bastard
                 pass
 
     if not today:
@@ -41,7 +41,7 @@ def index(request):
 
     tasksToShow = Task.objects.filter(due_date__range=(startDate, endDate), user=request.user)
     if category:
-        tasksToShow = tasksToShow.filter(type=category)
+        tasksToShow = tasksToShow.filter(type=category) # FIXME, does not work with recurring tasks
     taskList = [[] for _ in range(monthrange(startDate.year, startDate.month)[1])]
     
     for task in tasksToShow:
