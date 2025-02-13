@@ -33,17 +33,17 @@ class TaskForm(forms.ModelForm): # used to create a new task
         is_recurring = cleaned_data.get('is_recurring')
         
         if is_recurring:
-            # Recurring tasks need these fields
+            # recurring tasks need these fields
             if not cleaned_data.get('start_date'):
                 raise forms.ValidationError("Start date is required for recurring tasks")
             if not cleaned_data.get('end_date'):
                 raise forms.ValidationError("End date is required for recurring tasks")
             if not cleaned_data.get('repetition_period'):
                 raise forms.ValidationError("Repetition period is required for recurring tasks")
-            # Due date not required for recurring tasks
+            # due date not required for recurring tasks
             cleaned_data['due_date'] = None
         else:
-            # Non-recurring tasks need due_date
+            # non-recurring tasks need due_date
             if not cleaned_data.get('due_date'):
                 raise forms.ValidationError("Due date is required for non-recurring tasks")
         

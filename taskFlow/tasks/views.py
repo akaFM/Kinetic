@@ -107,7 +107,6 @@ def create_task(request):
             is_recurring = form.cleaned_data['is_recurring']
             
             if is_recurring:
-
                 # only in this case do we create a recurring pattern object
                 # otherwise, the task is one-time, so there isnt a point
                 pattern = RecurringPattern.objects.create(
@@ -144,6 +143,7 @@ def create_task(request):
                     elif pattern.repetition_period == RecurringPattern.RepetitionPeriod.WEEKLY:
                         current_date += timedelta(weeks=1)
                     elif pattern.repetition_period == RecurringPattern.RepetitionPeriod.MONTHLY:
+                        # add month
                         if current_date.month == 12:
                             current_date = current_date.replace(year=current_date.year + 1, month=1)
                         else:
@@ -161,8 +161,10 @@ def create_task(request):
                 )
                 
             return HttpResponseRedirect(reverse("index"))
+        else:
+            # If form is invalid, print errors to console for debugging
+            print("Form errors:", form.errors)
     else:
-
         # defining the form
         form = TaskForm()
         # GET req (form being rendered)
