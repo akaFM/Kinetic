@@ -6,6 +6,13 @@ class User(AbstractUser):
     """ inherits from AbstractUser, provided by Django """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # pk - id
 
+class TaskType(models.TextChoices):
+    FUN = "Fun"
+    WORK = "Work"
+    SCHOOL = "School"
+    CHORE = "Chore"
+    OTHER = "Other"
+
 class RecurringPattern(models.Model):
     class RepetitionPeriod(models.TextChoices):
         DAILY = "Daily"
@@ -15,7 +22,7 @@ class RecurringPattern(models.Model):
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recurring_patterns")
     description = models.TextField(default="A very important task.")
-    type = models.CharField(max_length=20, choices=Task.TaskType.choices, default=Task.TaskType.OTHER)
+    type = models.CharField(max_length=20, choices=TaskType.choices, default=TaskType.OTHER)
     urgency = models.IntegerField(default=3)
     repetition_period = models.CharField(max_length=20, choices=RepetitionPeriod.choices)
     start_date = models.DateField()
@@ -24,13 +31,6 @@ class RecurringPattern(models.Model):
 
 class Task(models.Model):
     """ task model """
-    class TaskType(models.TextChoices):
-        FUN = "Fun"
-        WORK = "Work"
-        SCHOOL = "School"
-        CHORE = "Chore"
-        OTHER = "Other"
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # pk - id
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")  # fk - user
     description = models.TextField(default="A very important task.") 
@@ -45,7 +45,7 @@ class Task(models.Model):
     is_recurring = models.BooleanField(default=False)
     repetition_period = models.CharField(
         max_length=20,
-        choices=Task.TaskType.choices,
+        choices=TaskType.choices,
         null=True,
         blank=True
     )
