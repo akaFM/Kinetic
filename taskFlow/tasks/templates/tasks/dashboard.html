@@ -10,6 +10,7 @@
 {% for day in taskList %}
     {% for task in day %}
         <div class="task">
+            <p>--------------------------------</p>
             <p>Description: {{ task.get_description }}</p>
             <p>Type: {{ task.get_type }}</p>
             <p>Urgency: {{ task.get_urgency }}</p>
