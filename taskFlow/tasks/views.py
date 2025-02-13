@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import check_password
 from datetime import date, datetime, timedelta
+from django.core import serializers
 from calendar import monthrange
 
 # https://stackoverflow.com/questions/17873855/manager-isnt-available-user-has-been-swapped-for-pet-person

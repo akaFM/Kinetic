@@ -1,28 +1,74 @@
 {% extends "tasks/base.html" %}
+{% load static %}
+{% load date_helper %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'tasks/dashboard.css' %}">
+    <script defer src="{% static 'tasks/dashboard.js' %}"></script>
+{% endblock %}
+
+{% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<form method="POST">
-    {% csrf_token %}
-    {{ calendarForm }}
-    {{ categoryForm }}
-    <button type="submit">Submit</button>
-</form>
-<form action="{% url 'create_task' %}">
-    <input type="submit" value="Create Task" />
-</form>
-<h1>{{currDay}} {{month}} {{year}}</h1>
-<h2>{{category}}</h2>                            
-{% for day in taskList %}
-    {% for task in day %}
-        <div class="task">
-            <p>--------------------------------</p>
-            <p>Description: {{ task.get_description }}</p>
-            <p>Type: {{ task.get_type }}</p>
-            <p>Urgency: {{ task.get_urgency }}</p>
-            <p>Due: {{ task.due_date }}</p>
-            <p>Completed: {{ task.completed }}</p>
-            <p>--------------------------------</p>
+
+<div class="dashboard-container">
+    <div class="calendar-header">
+        <h1 class="mb-0">{{ month|monthIntToMonthString }} {{ year }}</h1>
+        <div class="calendar-nav">
+            <form action="{% url 'create_task' %}">
+                <button class="btn btn-primary">+ Create Task</button>
+            </form>
         </div>
-    {% endfor %}
-{% endfor %}
+    </div>
+
+    <form method="POST" class="filter-form">
+        {% csrf_token %}
+        <div class="form-floating" style="width: 200px">
+            {{ calendarForm.date }}
+            <label for="{{ calendarForm.date.id_for_label }}">Select Month</label>
+        </div>
+        <div class="form-floating" style="width: 200px">
+            {{ categoryForm.category }}
+            <label for="{{ categoryForm.category.id_for_label }}">Filter Category</label>
+        </div>
+        <button type="submit" class="btn btn-outline-primary h-100">Apply Filters</button>
+    </form>
+
+    <div class="calendar-grid">
+        {% for day in taskList %}
+        <div class="calendar-day 
+                    {% if forloop.counter == currDay %}current-day{% endif %}
+                    {% if day %}has-tasks{% endif %}"
+             data-tasks='{{ day|safe }}'
+             data-date="{{ forloop.counter }}">
+            <div class="day-number">{{ forloop.counter }}</div>
+            {% if day %}
+            <div class="task-indicator">
+                {% for task in day|slice:":3" %}
+                <div class="task-item">{{ task.description }}</div>
+                {% endfor %}
+                {% if day|length > 3 %}
+                <div class="task-item">+ {{ day|length|add:"-3" }} more</div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Task Details Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tasks for <span id="modalDate"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="taskDetails">
+                <!-- JS will populate this -->
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
