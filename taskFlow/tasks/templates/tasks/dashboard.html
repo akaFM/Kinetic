@@ -1,12 +1,61 @@
 {% extends "tasks/base.html" %}
 
-{% block body %}
-<form method="POST">
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit">Submit</button>
-</form>
-<h1>{{currDay}} {{month}} {{year}}</h1>
-{{ taskList }}
+{% block head %}
+<style>
+    body {
+        background-color: #F4F2FC;
+        font-family: 'Poppins', sans-serif;
+    }
+    .dashboard-container {
+        display: flex;
+    }
+    .sidebar {
+        width: 250px;
+        background: linear-gradient(135deg, #A66DD4, #8B5ED7);
+        color: white;
+        padding: 20px;
+        min-height: 100vh;
+    }
+    .content {
+        flex: 1;
+        padding: 20px;
+    }
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
+        background-color: #8B5ED7;
+        border: none;
+    }
+    .btn-primary:hover {
+        background-color: #A66DD4;
+    }
+    .progress-bar {
+        background-color: #8B5ED7;
+    }
+</style>
+{% endblock %}
 
+{% block body %}
+<div class="dashboard-container">
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <p>Task Management</p>
+    </div>
+    <div class="content">
+        <h1>{{ currDay }} {{ month }} {{ year }}</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <div class="card mt-3">
+            <h3>Today's Tasks</h3>
+            {{ taskList }}
+        </div>
+    </div>
+</div>
 {% endblock %}
