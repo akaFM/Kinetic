@@ -10,7 +10,10 @@ function toggleRecurringFields() {
     // THIS REPEATS EVERY TIME THE CHECKBOX CHANGES
     const isRecurring = document.getElementById('id_is_recurring').checked;
     const recurringFields = document.getElementById('recurring-fields');
+    const dueDateField = document.getElementById('due-date-field');
+    
     recurringFields.style.display = isRecurring ? 'block' : 'none';
+    dueDateField.style.display = isRecurring ? 'none' : 'block';
 }
 </script>
 {% endblock %}
@@ -31,7 +34,10 @@ function toggleRecurringFields() {
         <p>{{ form.end_date.label_tag }} {{ form.end_date }}</p>
     </div>
     
-    <p>{{ form.due_date.label_tag }} {{ form.due_date }}</p>
+    <div id="due-date-field">
+        <p>{{ form.due_date.label_tag }} {{ form.due_date }}</p>
+    </div>
+    
     <button type="submit">Create Task</button>
 </form>
 
