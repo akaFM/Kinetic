@@ -103,10 +103,15 @@ def create_task(request):
     # POST req (data being submitted to create_task route)
     if request.method == "POST":
         form = TaskForm(request.POST)
+        print("POST data:", request.POST)
         if form.is_valid():
+            # debug
+            print("Form is valid")
             is_recurring = form.cleaned_data['is_recurring']
             
             if is_recurring:
+                # debug
+                print("Creating recurring task")
                 # only in this case do we create a recurring pattern object
                 # otherwise, the task is one-time, so there isnt a point
                 pattern = RecurringPattern.objects.create(
@@ -162,8 +167,9 @@ def create_task(request):
                 
             return HttpResponseRedirect(reverse("index"))
         else:
-            # If form is invalid, print errors to console for debugging
+            # debug
             print("Form errors:", form.errors)
+            print("Form cleaned data:", form.cleaned_data)
     else:
         # defining the form
         form = TaskForm()
