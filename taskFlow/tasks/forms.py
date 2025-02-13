@@ -50,5 +50,8 @@ class TaskForm(forms.ModelForm): # used to create a new task
         return cleaned_data
 
 class calendarChoice(forms.Form):
-    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
 
+
+class categoryChoice(forms.Form):
+    category = forms.ChoiceField(choices=[('', 'Select')] + list(Task.TaskType.choices), widget=forms.Select(), required=False)

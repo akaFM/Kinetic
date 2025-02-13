@@ -3,10 +3,15 @@
 {% block body %}
 <form method="POST">
     {% csrf_token %}
-    {{ form }}
+    {{ calendarForm }}
+    {{ categoryForm }}
     <button type="submit">Submit</button>
 </form>
+<form action="{% url 'create_task' %}">
+    <input type="submit" value="Create Task" />
+</form>
 <h1>{{currDay}} {{month}} {{year}}</h1>
+<h2>{{category}}</h2>                            
 {% for day in taskList %}
     {% for task in day %}
         <div class="task">
