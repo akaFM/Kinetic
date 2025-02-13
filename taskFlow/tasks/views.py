@@ -8,7 +8,7 @@ from .forms import *
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import check_password
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from calendar import monthrange
 
 # https://stackoverflow.com/questions/17873855/manager-isnt-available-user-has-been-swapped-for-pet-person
@@ -99,19 +99,57 @@ def logout(request):
 
 @login_required()
 def create_task(request):
-    
-    # POST req (data being submitted to create_task route)
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
-            task = form.save(commit=False)
-            task.user = request.user
-            task.save()
+            is_recurring = form.cleaned_data['is_recurring']
+            
+            if is_recurring:
+                # Create recurring pattern
+                pattern = RecurringPattern.objects.create(
+                    user=request.user,
+                    description=form.cleaned_data['description'],
+                    type=form.cleaned_data['type'],
+                    urgency=form.cleaned_data['urgency'],
+                    repetition_period=form.cleaned_data['repetition_period'],
+                    start_date=form.cleaned_data['start_date'],
+                    end_date=form.cleaned_data['end_date']
+                )
+                
+                # Create task instances
+                current_date = pattern.start_date
+                while current_date <= pattern.end_date:
+                    Task.objects.create(
+                        user=request.user,
+                        description=pattern.description,
+                        type=pattern.type,
+                        urgency=pattern.urgency,
+                        due_date=current_date,
+                        recurring_pattern=pattern
+                    )
+                    
+                    # Calculate next date based on repetition period
+                    if pattern.repetition_period == RecurringPattern.RepetitionPeriod.DAILY:
+                        current_date += timedelta(days=1)
+                    elif pattern.repetition_period == RecurringPattern.RepetitionPeriod.WEEKLY:
+                        current_date += timedelta(weeks=1)
+                    elif pattern.repetition_period == RecurringPattern.RepetitionPeriod.MONTHLY:
+                        # Add one month
+                        if current_date.month == 12:
+                            current_date = current_date.replace(year=current_date.year + 1, month=1)
+                        else:
+                            current_date = current_date.replace(month=current_date.month + 1)
+                    else:  # Yearly
+                        current_date = current_date.replace(year=current_date.year + 1)
+            else:
+                # Create single task
+                task = form.save(commit=False)
+                task.user = request.user
+                task.save()
+                
             return HttpResponseRedirect(reverse("index"))
     else:
-        # defining the form
         form = TaskForm()
-        # GET req (form being rendered)
         
     return render(request, "tasks/create_task.html", {
         "form": form
