@@ -1,48 +1,138 @@
-/* tasks/static/tasks/login.css */
+/* General Page Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #d1b3ff, #b084f7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Login Box */
 .login-box {
-    padding: 2.5rem;
+    display: flex;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 800px;
+    max-width: 90%;
 }
 
-.login-header {
-    text-align: center;
-    margin-bottom: 2rem;
+/* Illustration Section */
+.login-illustration {
+    background: linear-gradient(135deg, #b084f7, #8f6bc1);
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
 }
 
-.login-header h2 {
-    color: var(--accent-color);
-    margin-bottom: 0.5rem;
+.login-illustration img {
+    width: 100%;
+    max-width: 200px;
 }
 
-.login-submit {
-    margin-top: 1rem;
+/* Form Section */
+.login-form {
+    padding: 40px;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.login-submit:hover {
-    background-color: #357abd;
+h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #5d3ebc;
+    margin-bottom: 8px;
 }
 
+p {
+    font-size: 14px;
+    color: #7a7a7a;
+    margin-bottom: 20px;
+}
+
+/* Input Fields */
+.input-group {
+    margin-bottom: 16px;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #5d3ebc;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0c3fc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #8f6bc1;
+}
+
+/* Error Messages */
+.error-message {
+    color: #d9534f;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-btn {
+    background: linear-gradient(135deg, #5d3ebc, #8f6bc1);
+    color: white;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #4b2fa3, #7a5fb0);
+}
+
+/* Auth Links */
 .auth-links {
-    margin-top: 1.5rem;
     text-align: center;
+    margin-top: 16px;
 }
 
 .auth-links a {
-    color: var(--accent-color);
+    font-size: 14px;
+    color: #5d3ebc;
     text-decoration: none;
+    font-weight: 500;
 }
 
 .auth-links a:hover {
     text-decoration: underline;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.form-control {
-    padding: 12px;
-    border: 1px solid #dee2e6;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
