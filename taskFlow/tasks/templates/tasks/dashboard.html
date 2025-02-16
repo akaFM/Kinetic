@@ -1,74 +1,339 @@
 {% extends "tasks/base.html" %}
 {% load static %}
-{% load date_helper %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'tasks/dashboard.css' %}">
-    <script defer src="{% static 'tasks/dashboard.js' %}"></script>
+<!-- Bootstrap and Google Fonts -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #F4F2FC;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .dashboard-container {
+        display: flex;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+        width: 280px;
+        background: linear-gradient(135deg, #A66DD4, #8B5ED7);
+        color: white;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sidebar h2 {
+        font-weight: 600;
+    }
+
+    .sidebar-menu {
+        margin-top: 30px;
+        width: 100%;
+    }
+
+    .sidebar-menu a {
+        display: block;
+        color: white;
+        font-weight: 500;
+        padding: 10px;
+        text-decoration: none;
+        margin: 10px 0;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+    }
+
+    .sidebar-menu a:hover {
+        background-color: #8B5ED7;
+    }
+
+    .content {
+        flex: 1;
+        padding: 40px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Today's Task Section */
+    .today-task {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .today-task img {
+        width: 150px;
+        border-radius: 10px;
+    }
+
+    .btn-primary {
+        background-color: #8B5ED7;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        background-color: #A66DD4;
+    }
+
+    /* Task Categories */
+    .task-category {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .category-card {
+        width: 32%;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+    }
+
+    .category-card h5 {
+        font-weight: 600;
+    }
+
+    .category-card p {
+        font-weight: 400;
+    }
+
+    .divider {
+        border-bottom: 1px solid #E1D4FC;
+        margin: 15px 0;
+    }
+
+    .progress-bar-container {
+        margin-top: 15px;
+    }
+
+    .progress {
+        height: 8px;
+        border-radius: 5px;
+        background-color: #E1D4FC;
+        position: relative;
+    }
+
+    .progress-bar {
+        height: 100%;
+        border-radius: 5px;
+        background-color: #8B5ED7;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .progress-text {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .days-left {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: #8B5ED7;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .calendar-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .calendar-table {
+        width: 100%;
+    }
+
+    .calendar-table th, .calendar-table td {
+        padding: 8px;
+        text-align: center;
+        border-radius: 5px;
+    }
+
+    .calendar-table th {
+        background-color: #8B5ED7;
+        color: white;
+    }
+
+    .calendar-table td:hover {
+        background-color: #E1D4FC;
+    }
+
+    .today {
+        background-color: #A66DD4;
+        color: white;
+        font-weight: bold;
+    }
+
+    /* Button Styling */
+    .create-task-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #8B5ED7;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+    }
+
+    .create-task-btn:hover {
+        background-color: #A66DD4;
+    }
+</style>
 {% endblock %}
 
-{% block title %}Dashboard{% endblock %}
-
 {% block body %}
-
 <div class="dashboard-container">
-    <div class="calendar-header">
-        <h1 class="mb-0">{{ month|monthIntToMonthString }} {{ year }}</h1>
-        <div class="calendar-nav">
-            <form action="{% url 'create_task' %}">
-                <button class="btn btn-primary">+ Create Task</button>
-            </form>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <div class="sidebar-menu">
+            <a href="#"><i class="bi bi-house-door"></i> Home</a>
+            <a href="#"><i class="bi bi-calendar-check"></i> Tasks</a>
+            <a href="#"><i class="bi bi-people"></i> Team</a>
+            <a href="#"><i class="bi bi-gear"></i> Settings</a>
         </div>
     </div>
 
-    <form method="POST" class="filter-form">
-        {% csrf_token %}
-        <div class="form-floating" style="width: 200px">
-            {{ calendarForm.date }}
-            <label for="{{ calendarForm.date.id_for_label }}">Select Month</label>
-        </div>
-        <div class="form-floating" style="width: 200px">
-            {{ categoryForm.category }}
-            <label for="{{ categoryForm.category.id_for_label }}">Filter Category</label>
-        </div>
-        <button type="submit" class="btn btn-outline-primary h-100">Apply Filters</button>
-    </form>
-
-    <div class="calendar-grid">
-        {% for day in taskList %}
-        <div class="calendar-day 
-                    {% if forloop.counter == currDay %}current-day{% endif %}
-                    {% if day %}has-tasks{% endif %}"
-             data-tasks='{{ day|safe }}'
-             data-date="{{ forloop.counter }}">
-            <div class="day-number">{{ forloop.counter }}</div>
-            {% if day %}
-            <div class="task-indicator">
-                {% for task in day|slice:":3" %}
-                <div class="task-item">{{ task.description }}</div>
-                {% endfor %}
-                {% if day|length > 3 %}
-                <div class="task-item">+ {{ day|length|add:"-3" }} more</div>
-                {% endif %}
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Today's Task Section -->
+        <div class="today-task">
+            <div>
+                <h3>Today's Tasks</h3>
+                <p>Stay on track with your schedule!</p>
+                <button class="btn btn-primary">Today's Schedule</button>
             </div>
-            {% endif %}
+            <!-- Update the image source to your new image -->
+            <img src="{% static 'tasks/Screenshot 2025-02-15 at 4.49.30 PM.png' %}" alt="Task Image">
         </div>
-        {% endfor %}
+
+        <!-- Task Categories -->
+        <div class="task-category">
+            <div class="category-card">
+                <h5>Fun</h5>
+                <p>🎮 Relax and Enjoy! </p>
+                <div class="divider"></div>
+                <div class="progress-bar-container">
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>Progress</span>
+                        <span>40%</span>
+                    </div>
+                </div>
+                <div class="days-left">4 days left</div>
+            </div>
+            <div class="category-card">
+                <h5>Work</h5>
+                <p>💼 Stay Productive</p>
+                <div class="divider"></div>
+                <div class="progress-bar-container">
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>Progress</span>
+                        <span>60%</span>
+                    </div>
+                </div>
+                <div class="days-left">3 days left</div>
+            </div>
+            <div class="category-card">
+                <h5>School</h5>
+                <p>📚 Assignments & Projects</p>
+                <div class="divider"></div>
+                <div class="progress-bar-container">
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>Progress</span>
+                        <span>80%</span>
+                    </div>
+                </div>
+                <div class="days-left">2 days left</div>
+            </div>
+        </div>
+
+        <!-- Create Task Button -->
+        <form action="{% url 'create_task' %}" method="get">
+            <button class="create-task-btn" type="submit">Create Task</button>
+        </form>
+
+        <!-- Calendar Section -->
+        <div class="calendar-container">
+            <h5 id="calendar-month"></h5>
+            <table class="calendar-table">
+                <thead>
+                    <tr>
+                        <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-<!-- Task Details Modal -->
-<div class="modal fade" id="taskModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Tasks for <span id="modalDate"></span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="taskDetails">
-                <!-- JS will populate this -->
-            </div>
-        </div>
-    </div>
-</div>
+<!-- JavaScript for Dynamic Calendar -->
+<script>
+    function generateCalendar() {
+        const today = new Date();
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
+        const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+
+        document.getElementById("calendar-month").innerText = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
+
+        let calendarBody = "";
+        let date = 1;
+
+        for (let i = 0; i < 6; i++) {
+            let row = "<tr>";
+            for (let j = 1; j <= 7; j++) {
+                if ((i === 0 && j < firstDay) || date > daysInMonth) {
+                    row += "<td></td>";
+                } else {
+                    row += `<td class="${date === today.getDate() ? 'today' : ''}">${date}</td>`;
+                    date++;
+                }
+            }
+            row += "</tr>";
+            calendarBody += row;
+        }
+        document.getElementById("calendar-body").innerHTML = calendarBody;
+    }
+
+    window.onload = generateCalendar;
+</script>
 {% endblock %}
