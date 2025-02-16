@@ -1,14 +1,57 @@
-{# Placeholder html for task creation - avo #}
+{% extends "tasks/base.html" %}
+{% load static %}
 
+{% block title %}Create Task{% endblock %}
 
-
-{% extends 'tasks/base.html' %}
+{% block head %}
+        <link rel="stylesheet" type="text/css" href="{% static 'tasks/create_task.css' %}">
+        <script>
+        function toggleRecurringFields() {
+            // THIS REPEATS EVERY TIME THE CHECKBOX CHANGES
+            const isRecurring = document.getElementById('id_is_recurring').checked;
+            const recurringFields = document.getElementById('recurring-fields');
+            const dueDateField = document.getElementById('due-date-field');
+            const dueDateInput = document.getElementById('id_due_date');
+            
+            recurringFields.style.display = isRecurring ? 'block' : 'none';
+            dueDateField.style.display = isRecurring ? 'none' : 'block';
+            
+            // due date not expected from backend for recurring tasks,
+            // so we remove the "required" attribute
+            if (isRecurring) {
+                dueDateInput.removeAttribute('required');
+            } else {
+                dueDateInput.setAttribute('required', 'required');
+            }
+        }
+        </script>
+{% endblock %}
 
 {% block body %}
 <h2>Create New Task</h2>
 <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
+    <!-- {{ form.as_p }} i just made all the elements <p> tags this was bothering me -->
+    <p>{{ form.description.label_tag }} {{ form.description }}</p>
+    <p>{{ form.type.label_tag }} {{ form.type }}</p>
+    <p>{{ form.urgency.label_tag }} {{ form.urgency }}</p>
+    <p>{{ form.is_recurring.label_tag }} {{ form.is_recurring }}</p>
+    
+    <div id="recurring-fields" style="display: none;">
+        <p>{{ form.repetition_period.label_tag }} {{ form.repetition_period }}</p>
+        <p>{{ form.start_date.label_tag }} {{ form.start_date }}</p>
+        <p>{{ form.end_date.label_tag }} {{ form.end_date }}</p>
+    </div>
+    
+    <div id="due-date-field">
+        <p>{{ form.due_date.label_tag }} {{ form.due_date }}</p>
+    </div>
+    
     <button type="submit">Create Task</button>
 </form>
+
+<script>
+// I would prefer to make this a call to a JS function, gonna leave it for our JS guy to do though.
+document.getElementById('id_is_recurring').addEventListener('change', toggleRecurringFields);
+</script>
 {% endblock %}

@@ -8,7 +8,8 @@ from .forms import *
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import check_password
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+from django.core import serializers
 from calendar import monthrange
 
 # https://stackoverflow.com/questions/17873855/manager-isnt-available-user-has-been-swapped-for-pet-person
@@ -29,7 +30,7 @@ def index(request):
                 pass 
         if "category" in request.POST:
             category = request.POST["category"]
-            if category not in Task.TaskType.values: # if the user is a bastard
+            if category not in TaskType.values: # if the user is a bastard
                 pass
 
     if not today:
@@ -40,7 +41,7 @@ def index(request):
 
     tasksToShow = Task.objects.filter(due_date__range=(startDate, endDate), user=request.user)
     if category:
-        tasksToShow = tasksToShow.filter(type=category)
+        tasksToShow = tasksToShow.filter(type=category) # FIXME, does not work with recurring tasks
     taskList = [[] for _ in range(monthrange(startDate.year, startDate.month)[1])]
     
     for task in tasksToShow:
@@ -116,11 +117,73 @@ def create_task(request):
     # POST req (data being submitted to create_task route)
     if request.method == "POST":
         form = TaskForm(request.POST)
+        print("POST data:", request.POST)
         if form.is_valid():
-            task = form.save(commit=False)
-            task.user = request.user
-            task.save()
+            # debug
+            print("Form is valid")
+            is_recurring = form.cleaned_data['is_recurring']
+            
+            if is_recurring:
+                # debug
+                print("Creating recurring task")
+                # only in this case do we create a recurring pattern object
+                # otherwise, the task is one-time, so there isnt a point
+                pattern = RecurringPattern.objects.create(
+                    user=request.user,
+                    description=form.cleaned_data['description'],
+                    type=form.cleaned_data['type'],
+                    urgency=form.cleaned_data['urgency'],
+                    repetition_period=form.cleaned_data['repetition_period'],
+                    start_date=form.cleaned_data['start_date'],
+                    end_date=form.cleaned_data['end_date']
+                )
+
+                # TODO: somewhere in this route, implement a backend check to limit the end date- 
+                # the user shouldnt be able to make the end date more than 5 years away or something like that
+                
+                # now, we create a different task object until the end date
+                # for now im using a less efficient data design, but will refine this soon to avoid
+                # redundant rows
+                current_date = pattern.start_date
+                while current_date <= pattern.end_date: # this will keep tasks from being created past the end date
+                    
+                    # as of right now, the task object has a bunch of repetitive info that repeatedly
+                    # gets entered into the table, but this will be fixed with a M:1 relationship with the
+                    # recurring pattern object
+                    Task.objects.create(
+                        user=request.user,
+                        due_date=current_date,
+                        recurring_pattern=pattern
+                    )
+                    
+                    # calculate next date based on repetition period
+                    if pattern.repetition_period == RecurringPattern.RepetitionPeriod.DAILY:
+                        current_date += timedelta(days=1)
+                    elif pattern.repetition_period == RecurringPattern.RepetitionPeriod.WEEKLY:
+                        current_date += timedelta(weeks=1)
+                    elif pattern.repetition_period == RecurringPattern.RepetitionPeriod.MONTHLY:
+                        # add month
+                        if current_date.month == 12:
+                            current_date = current_date.replace(year=current_date.year + 1, month=1)
+                        else:
+                            current_date = current_date.replace(month=current_date.month + 1)
+                    else:  # yearly 
+                        current_date = current_date.replace(year=current_date.year + 1)
+            else:
+                # create a non-recurring task
+                task = Task.objects.create(
+                    user=request.user,
+                    description=form.cleaned_data['description'],
+                    type=form.cleaned_data['type'],
+                    urgency=form.cleaned_data['urgency'],
+                    due_date=form.cleaned_data['due_date']
+                )
+                
             return HttpResponseRedirect(reverse("index"))
+        else:
+            # debug
+            print("Form errors:", form.errors)
+            print("Form cleaned data:", form.cleaned_data)
     else:
         # defining the form
         form = TaskForm()
