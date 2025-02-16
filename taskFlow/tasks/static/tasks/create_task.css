@@ -1,0 +1,161 @@
+/* General Page Styling */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #9c85d9 20%, #6447b3 60%, #4e34d2 80%); /* Shades of purple gradient */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Task Creation Box */
+.task-create-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    z-index: 1;
+}
+
+/* Task Box */
+.task-create-box {
+    display: flex;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 800px;
+    max-width: 90%;
+    backdrop-filter: blur(8px);
+}
+
+/* Illustration Section */
+.task-create-illustration {
+    background: linear-gradient(135deg, #7b59d7, #9c78ff);
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+}
+
+.task-create-illustration img {
+    width: 100%;
+    max-width: 200px;
+}
+
+/* Form Section */
+.task-create-form {
+    padding: 40px;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #4e3e9e;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.form-field {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    margin-bottom: 20px;
+}
+
+/* Animation when elements appear */
+.form-field.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Input Fields */
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0c3fc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.8);
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #8f6bc1;
+}
+
+/* Recurring Task Fields */
+#recurring-fields {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.create-task-btn {
+    background: linear-gradient(135deg, #8f6bc1, #7b59d7);
+    color: white;
+}
+
+.create-task-btn:hover {
+    background: linear-gradient(135deg, #6e4d9a, #4e3e9e);
+}
+
+/* Miscellaneous */
+input, select, button {
+    margin-bottom: 20px;
+}
+
+.task-create-form p {
+    font-size: 16px;
+    color: #5d3ebc;
+}
+
+/* Playful Background - Floating Stars and Clouds */
+body::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: url('{% static "tasks/images/stars_and_clouds.png" %}') no-repeat center;
+    background-size: contain;
+    opacity: 0.2;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
+    animation: floatBackground 6s infinite ease-in-out alternate;
+}
+
+@keyframes floatBackground {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(10px);
+    }
+}

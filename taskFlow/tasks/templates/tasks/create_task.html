@@ -7,7 +7,6 @@
         <link rel="stylesheet" type="text/css" href="{% static 'tasks/create_task.css' %}">
         <script>
         function toggleRecurringFields() {
-            // THIS REPEATS EVERY TIME THE CHECKBOX CHANGES
             const isRecurring = document.getElementById('id_is_recurring').checked;
             const recurringFields = document.getElementById('recurring-fields');
             const dueDateField = document.getElementById('due-date-field');
@@ -16,42 +15,56 @@
             recurringFields.style.display = isRecurring ? 'block' : 'none';
             dueDateField.style.display = isRecurring ? 'none' : 'block';
             
-            // due date not expected from backend for recurring tasks,
-            // so we remove the "required" attribute
             if (isRecurring) {
                 dueDateInput.removeAttribute('required');
             } else {
                 dueDateInput.setAttribute('required', 'required');
             }
         }
+
+        // JavaScript for floating animation on task form fields
+        window.addEventListener('DOMContentLoaded', () => {
+            const formFields = document.querySelectorAll('.form-field');
+            formFields.forEach((field, index) => {
+                setTimeout(() => {
+                    field.classList.add('animate');
+                }, index * 200);
+            });
+        });
         </script>
 {% endblock %}
 
 {% block body %}
-<h2>Create New Task</h2>
-<form method="POST">
-    {% csrf_token %}
-    <!-- {{ form.as_p }} i just made all the elements <p> tags this was bothering me -->
-    <p>{{ form.description.label_tag }} {{ form.description }}</p>
-    <p>{{ form.type.label_tag }} {{ form.type }}</p>
-    <p>{{ form.urgency.label_tag }} {{ form.urgency }}</p>
-    <p>{{ form.is_recurring.label_tag }} {{ form.is_recurring }}</p>
-    
-    <div id="recurring-fields" style="display: none;">
-        <p>{{ form.repetition_period.label_tag }} {{ form.repetition_period }}</p>
-        <p>{{ form.start_date.label_tag }} {{ form.start_date }}</p>
-        <p>{{ form.end_date.label_tag }} {{ form.end_date }}</p>
+<div class="task-create-container">
+    <div class="task-create-box">
+        <div class="task-create-illustration">
+            <img src="{% static 'tasks/create_task_illustration.svg' %}" alt="Create Task Illustration">
+        </div>
+        <div class="task-create-form">
+            <h2>Create a New Task</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-field">{{ form.description.label_tag }} {{ form.description }}</div>
+                <div class="form-field">{{ form.type.label_tag }} {{ form.type }}</div>
+                <div class="form-field">{{ form.urgency.label_tag }} {{ form.urgency }}</div>
+                <div class="form-field">{{ form.is_recurring.label_tag }} {{ form.is_recurring }}</div>
+                
+                <div id="recurring-fields" style="display: none;">
+                    <div class="form-field">{{ form.repetition_period.label_tag }} {{ form.repetition_period }}</div>
+                    <div class="form-field">{{ form.start_date.label_tag }} {{ form.start_date }}</div>
+                    <div class="form-field">{{ form.end_date.label_tag }} {{ form.end_date }}</div>
+                </div>
+                
+                <div id="due-date-field">
+                    <div class="form-field">{{ form.due_date.label_tag }} {{ form.due_date }}</div>
+                </div>
+                
+                <button type="submit" class="btn create-task-btn">Create Task</button>
+            </form>
+        </div>
     </div>
-    
-    <div id="due-date-field">
-        <p>{{ form.due_date.label_tag }} {{ form.due_date }}</p>
-    </div>
-    
-    <button type="submit">Create Task</button>
-</form>
-
+</div>
 <script>
-// I would prefer to make this a call to a JS function, gonna leave it for our JS guy to do though.
 document.getElementById('id_is_recurring').addEventListener('change', toggleRecurringFields);
 </script>
 {% endblock %}
