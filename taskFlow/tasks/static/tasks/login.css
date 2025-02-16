@@ -1,12 +1,37 @@
 /* General Page Styling */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap');
+
 body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #d1b3ff, #b084f7);
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #a68fe5 20%, #6545a3 60%, #4b0e9b 80%); /* Stronger gradient */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animated Clock Design */
+body::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: url('{% static "tasks/images/clock.jpeg" %}') no-repeat center;
+    background-size: contain;
+    opacity: 0.6; /* Increased opacity for better visibility */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: floatClock 6s infinite ease-in-out alternate;
+    z-index: 0; /* Ensure it's not hidden behind content */
+}
+
+@keyframes floatClock {
+    from { transform: translateY(0px); }
+    to { transform: translateY(20px); }
 }
 
 /* Container */
@@ -15,22 +40,24 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
+    z-index: 1;
 }
 
 /* Login Box */
 .login-box {
     display: flex;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 16px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     width: 800px;
     max-width: 90%;
+    backdrop-filter: blur(8px);
 }
 
 /* Illustration Section */
 .login-illustration {
-    background: linear-gradient(135deg, #b084f7, #8f6bc1);
+    background: linear-gradient(135deg, #9c78ff, #7a52c8);
     padding: 40px;
     display: flex;
     align-items: center;
@@ -53,15 +80,15 @@ body {
 }
 
 h2 {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 600;
     color: #5d3ebc;
     margin-bottom: 8px;
 }
 
 p {
-    font-size: 14px;
-    color: #7a7a7a;
+    font-size: 15px;
+    color: #656565;
     margin-bottom: 20px;
 }
 
@@ -76,6 +103,7 @@ p {
     font-weight: 500;
     display: block;
     margin-bottom: 6px;
+    margin-right: 10px;
 }
 
 .input-group input {
@@ -86,6 +114,7 @@ p {
     font-size: 14px;
     outline: none;
     transition: border-color 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
 }
 
 .input-group input:focus {
