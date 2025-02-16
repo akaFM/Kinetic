@@ -162,6 +162,7 @@
     }
 
     .calendar-container {
+        position: relative;
         background: white;
         padding: 20px;
         border-radius: 10px;
@@ -301,9 +302,13 @@
                 </thead>
                 <tbody id="calendar-body"></tbody>
             </table>
+
+            {% include 'tasks/dayViewPopUp.html' %} <!-- Calendar Day View Pop Up Section-->
+
         </div>
     </div>
 </div>
+
 
 <!-- JavaScript for Dynamic Calendar -->
 <script>
@@ -336,4 +341,5 @@
 
     window.onload = generateCalendar;
 </script>
+
 {% endblock %}
