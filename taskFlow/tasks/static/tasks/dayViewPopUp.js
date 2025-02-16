@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
 function handleCalendarDayOnClick(event)
 {
     const target = event.target;
@@ -17,44 +16,50 @@ function handleCalendarDayOnClick(event)
     // Checks if the click event that occured on the calendar was on one of its days (a <td> element): 
     if (target.tagName === 'TD' && target.textContent.trim() !== '')
     {
-        const dayNumber = target.cellIndex;
+        const dayNumber  = target.cellIndex;
         const dateNumber = target.textContent.trim();
-        const dayString = getDay(dayNumber);
+        const dayString  = getDay(dayNumber);
 
-        // Creates(updates) day view pop up window:
+        // Creates(updates) day view pop up window with appropriate day info:
         updateDayView(dateNumber, dayString);
     }
 }
 
-function handleDayViewCloseButtonOnClick(event)
+function handleDayViewCloseButtonOnClick()
 {
-    const dayViewTasks     = document.getElementById('day-view-task-container');
     const calendarDayView  = document.getElementById('calendar-day-view');
 
-    // When day view pop up is closed, we must reset it for future use (when another day is clicked again).
-    dayViewTasks.innerHTML = "";
+    // Before day view pop up is closed, we must reset it for future use (when another day is clicked again).
+    clearDayViewPop(); 
     hideElement(calendarDayView);
 }
 
 function updateDayView(dateNumber, dayString)
 {
     const calendarDayView = document.getElementById('calendar-day-view');
-    const dayViewTasks    = document.getElementById('day-view-task-container');
-    const dayTitle        = document.getElementById('title-day');
-    const dateTitle       = document.getElementById('title-date');
-    const calendarMonth   = document.getElementById('calendar-month');
-
-    // Set the day view pop's title to match the day that was clicked on: 
-    const month         = calendarMonth.innerText;
-    dayTitle.innerText  = dayString;
-    dateTitle.innerText = `${dateNumber} ${month}`; 
     
-    getDayViewTasks(dayViewTasks); // just creates 12 dummy tasks elements right now for demoing.
+    updateDayViewTitle(dateNumber, dayString);
+    getDayViewTasks(); // just creates 12 dummy tasks elements right now for demoing.
     showElement(calendarDayView);
 }
 
-function getDayViewTasks(dayViewTaskContainer)
+function updateDayViewTitle(dateNumber, dayString)
 {
+    const dayTitle      = document.getElementById('title-day');
+    const dateTitle     = document.getElementById('title-date');
+    const calendarMonth = document.getElementById('calendar-month');
+    const month         = calendarMonth.innerText;
+
+    // Set the day view pop title to match the day that was clicked on: 
+    dayTitle.innerText  = dayString;
+    dateTitle.innerText = `${dateNumber} ${month}`;
+}
+
+function getDayViewTasks()
+{
+    const dayViewTasks = document.getElementById('day-view-task-container');
+
+    // just creates 12 dummy tasks elements right now for demoing.
     for (let i = 0; i < 12; i++) 
     {
         const taskContainer = document.createElement('div');
@@ -63,8 +68,14 @@ function getDayViewTasks(dayViewTaskContainer)
         taskText.classList.add('task-text');
         taskText.textContent = `Task Description ${i + 1}`;  
         taskContainer.appendChild(taskText);
-        dayViewTaskContainer.appendChild(taskContainer);
+        dayViewTasks.appendChild(taskContainer);
     }
+}
+
+function clearDayViewPop()
+{
+    const dayViewTasks     = document.getElementById('day-view-task-container');
+    dayViewTasks.innerHTML = "";
 }
 
 function showElement(element)
