@@ -1,0 +1,129 @@
+#calendar-day-view 
+{
+  display: none;
+}
+
+.day-view-container 
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.7s ease;
+}
+
+.day-view-title-bar-container
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.day-view-task-container
+{
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.day-view-task-container::-webkit-scrollbar 
+{
+    width: 8px;  
+}
+
+.day-view-task-container::-webkit-scrollbar-track 
+{
+    background-color: #f1f1f1;  
+    border-radius: 10px;
+}
+
+.day-view-task-container::-webkit-scrollbar-thumb 
+{
+    background-color: #A66DD4;  
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;  
+}
+
+.day-view-task-container::-webkit-scrollbar-thumb:hover 
+{
+    background-color: #6a3eb7;  
+}
+
+.day-view-title 
+{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 12px;
+
+    margin: 0;
+    font-size: 12px;
+}
+
+.day-view-title h4
+{
+    color: #bebebe;
+}
+
+.task-container
+{
+    font-size: 16px;
+    background-color: #8B5ED7;
+    margin-top: 8px;
+    padding: 2px;
+        border: none;
+        border-radius: 8px;
+}
+
+.task-text
+{
+    font-size: 16px;
+    color: white;
+    margin-left: 8px;
+
+}
+
+.day-view-content 
+{
+  background-color: white;
+  padding: 20px;
+  height: 400px;
+  width: 600px;
+  min-width: 300px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 3px 2px 20px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.day-view-close-btn 
+{
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@media (max-width: 1076px) 
+{
+  .day-view-container .day-view-content 
+  {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-width: 1027px) 
+{
+  .day-view-container .day-view-content 
+  {
+    transform: scale(0.7);
+  }
+}

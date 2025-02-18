@@ -1,0 +1,26 @@
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'tasks/dayViewPopUp.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div id="calendar-day-view" class="day-view-container">
+        <section id="day-view-content" class="day-view-content">
+            <section id="day-view-title-bar" class="day-view-title-bar-container">
+                <div id="day-view-title" class="day-view-title">
+                    <h2 id="title-day">Day Title</h2>
+                    <h4 id="title-date">Date Title</h4>
+                </div>
+                <span id="day-view-close-btn" class="day-view-close-btn">&times;</span>
+            </section>
+            <section id="day-view-task-container" class="day-view-task-container">
+                <!-- It dynamically adds dummy tasks here for demo, using js.-->
+            </section>
+        </section>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'tasks/dayViewPopUp.js' %}"></script>
+{% endblock %}
