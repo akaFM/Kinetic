@@ -41,7 +41,7 @@ def index(request):
 
     tasksToShow = Task.objects.filter(due_date__range=(startDate, endDate), user=request.user)
     if category:
-        tasksToShow = tasksToShow.filter(type=category) # FIXME, does not work with recurring tasks
+        tasksToShow = tasksToShow.filter(type=category) | tasksToShow.filter(recurring_pattern__in=RecurringPattern.objects.filter(type=category))
     taskList = [[] for _ in range(monthrange(startDate.year, startDate.month)[1])]
     
     for task in tasksToShow:
