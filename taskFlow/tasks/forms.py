@@ -1,6 +1,5 @@
 from django import forms
 from .models import *
-from calendar import month_name
 
 class regsiterLogin(forms.Form):
     username = forms.CharField(label="username", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'}))

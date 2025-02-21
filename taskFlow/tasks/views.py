@@ -1,16 +1,15 @@
 from django.shortcuts import render
 from django.urls import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-import django.contrib.auth
-from .models import *
-from .forms import *
-from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth import get_user_model
 from datetime import date, datetime, timedelta
-from django.core import serializers
 from calendar import monthrange
+
+from .models import *
+from .forms import *
 
 # https://stackoverflow.com/questions/17873855/manager-isnt-available-user-has-been-swapped-for-pet-person
 from django.contrib.auth import get_user_model
