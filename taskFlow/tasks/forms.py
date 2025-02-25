@@ -6,7 +6,7 @@ class regsiterLogin(forms.Form):
     password = forms.CharField(label="password", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}), max_length=100)
 
 
-class TaskForm(forms.ModelForm): # used to create a new task
+class TaskForm(forms.ModelForm):
     is_recurring = forms.BooleanField(required=False)
     repetition_period = forms.ChoiceField(
         choices=RecurringPattern.RepetitionPeriod.choices,

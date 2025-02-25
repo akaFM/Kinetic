@@ -3,8 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
-    """ inherits from AbstractUser, provided by Django """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) # pk - id
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
 class TaskType(models.TextChoices):
     FUN = "Fun"
@@ -21,7 +20,7 @@ class RecurringPattern(models.Model):
         YEARLY = "Yearly"
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recurring_patterns")
-    description = models.TextField(default="A very important task.")
+    description = models.TextField(default="")
     type = models.CharField(max_length=20, choices=TaskType.choices, default=TaskType.OTHER)
     urgency = models.IntegerField(default=3)
     repetition_period = models.CharField(max_length=20, choices=RepetitionPeriod.choices)
@@ -30,7 +29,6 @@ class RecurringPattern(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Task(models.Model):
-    """ task model """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
     due_date = models.DateField(null=True, blank=True)
@@ -38,7 +36,7 @@ class Task(models.Model):
     completed = models.BooleanField(default=False)
     recurring_pattern = models.ForeignKey(RecurringPattern, on_delete=models.CASCADE, null=True, blank=True, related_name="instances")
     
-    # Only for non-recurring tasks
+    # only for non-recurring tasks
     description = models.TextField(null=True, blank=True)
     type = models.CharField(max_length=20, choices=TaskType.choices, null=True, blank=True)
     urgency = models.IntegerField(null=True, blank=True)
