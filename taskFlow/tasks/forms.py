@@ -1,13 +1,12 @@
 from django import forms
 from .models import *
-from calendar import month_name
 
 class regsiterLogin(forms.Form):
     username = forms.CharField(label="username", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'}))
     password = forms.CharField(label="password", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}), max_length=100)
 
 
-class TaskForm(forms.ModelForm): # used to create a new task
+class TaskForm(forms.ModelForm):
     is_recurring = forms.BooleanField(required=False)
     repetition_period = forms.ChoiceField(
         choices=RecurringPattern.RepetitionPeriod.choices,
