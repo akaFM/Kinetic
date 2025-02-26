@@ -34,8 +34,8 @@ function handlePasswordFormatValidation(event)
     // At least one uppercase
     // At least one lowercase
     // At least one number
-    // At least one special char (no spaces) 
-    const password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{6,20}$/;
+    // At least one special char
+    const password_regex = /^(?=(.*[A-Z]))(?=(.*[a-z]))(?=(.*\d))(?=(.*[^\w\s])).{6,20}$/;
 
     if (!password_regex.test(password))
     {
