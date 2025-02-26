@@ -7,24 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     closeButton.addEventListener ('click', handleDayViewCloseButtonOnClick);
 });
 
-
-
-function handleCalendarDayOnClick(event)
-{
-    const target = event.target;
-
-    // Checks if the click event that occured on the calendar was on one of its days (a <td> element): 
-    if (target.tagName === 'TD' && target.textContent.trim() !== '')
-    {
-        const dayNumber  = target.cellIndex;
-        const dateNumber = target.textContent.trim();
-        const dayString  = getDay(dayNumber);
-
-        // Creates(updates) day view pop up window with appropriate day info:
-        updateDayView(dateNumber, dayString);
-    }
-}
-
 function handleDayViewCloseButtonOnClick()
 {
     const calendarDayView  = document.getElementById('calendar-day-view');
@@ -34,43 +16,58 @@ function handleDayViewCloseButtonOnClick()
     hideElement(calendarDayView);
 }
 
-function updateDayView(dateNumber, dayString)
-{
-    const calendarDayView = document.getElementById('calendar-day-view');
+function showDayView(date) {
+    const dayView = document.getElementById('calendar-day-view');
+    const dayViewTitle = document.getElementById('title-day');
+    const dayViewDate = document.getElementById('title-date');
+    const taskContainer = document.getElementById('day-view-task-container');
     
-    updateDayViewTitle(dateNumber, dayString);
-    getDayViewTasks(); // just creates 12 dummy tasks elements right now for demoing.
-    showElement(calendarDayView);
-}
-
-function updateDayViewTitle(dateNumber, dayString)
-{
-    const dayTitle      = document.getElementById('title-day');
-    const dateTitle     = document.getElementById('title-date');
-    const calendarMonth = document.getElementById('calendar-month');
-    const month         = calendarMonth.innerText;
-
-    // Set the day view pop title to match the day that was clicked on: 
-    dayTitle.innerText  = dayString;
-    dateTitle.innerText = `${dateNumber} ${month}`;
-}
-
-function getDayViewTasks()
-{
-    const dayViewTasks = document.getElementById('day-view-task-container');
-
-    // just creates 12 dummy tasks elements right now for demoing.
-    for (let i = 0; i < 12; i++) 
-    {
-        const taskContainer = document.createElement('div');
-        taskContainer.classList.add('task-container');
-        const taskText = document.createElement('span');
-        taskText.classList.add('task-text');
-        taskText.textContent = `Task Description ${i + 1}`;  
-        taskContainer.appendChild(taskText);
-        dayViewTasks.appendChild(taskContainer);
+    // Format the date for display
+    const dateObj = new Date(date);
+    const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+    const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    
+    // Update the title and date
+    dayViewTitle.textContent = dayName;
+    dayViewDate.textContent = formattedDate;
+    
+    // Clear previous content
+    taskContainer.innerHTML = '';
+    
+    // Get tasks for this date from our Django-provided data
+    const tasksForDay = tasksData[date] || [];
+    
+    if (tasksForDay.length === 0) {
+        // Show "No tasks" message
+        const noTasksMessage = document.createElement('div');
+        noTasksMessage.className = 'no-tasks-message';
+        noTasksMessage.textContent = 'No tasks on this day!';
+        taskContainer.appendChild(noTasksMessage);
+    } else {
+        // Create elements for each task
+        tasksForDay.forEach(task => {
+            const taskElement = document.createElement('div');
+            taskElement.className = 'day-view-task';
+            
+            taskElement.innerHTML = `
+                <div class="task-header">
+                    <span class="task-type ${task.type.toLowerCase()}">${task.type}</span>
+                    <span class="task-urgency">Urgency: ${task.urgency}</span>
+                </div>
+                <div class="task-description">${task.description}</div>
+            `;
+            
+            taskContainer.appendChild(taskElement);
+        });
     }
+    
+    dayView.style.display = 'flex';
 }
+
+// Close button handler
+document.getElementById('day-view-close-btn').onclick = function() {
+    document.getElementById('calendar-day-view').style.display = 'none';
+};
 
 function clearDayViewPop()
 {
@@ -86,10 +83,4 @@ function showElement(element)
 function hideElement(element)
 {
     element.style.display = "none";
-}
-
-function getDay(dayOfWeek)
-{
-    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday","Sunday"];
-    return daysOfWeek[dayOfWeek];
 }

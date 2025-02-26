@@ -77,27 +77,25 @@ def get_next_date(current_date, repetition_period):
     return current_date
 
 
-@login_required()
+@login_required
 def index(request):
-    category = request.POST.get("category")
-    today = get_today(request)
-    start_date = today.replace(day=1)
-    end_date = today.replace(day=monthrange(today.year, today.month)[1])
-
-    tasks = Task.objects.filter(due_date__range=(start_date, end_date), user=request.user)
-    tasks = filter_tasks_by_category(tasks, category)
-    task_list = group_tasks_by_day(tasks, today.year, today.month)
-
-    context = {
-        "taskList": task_list,
-        "category": category if category and category in TaskType.values else "All Tasks",
-        "month": today.month,
-        "year": today.year,
-        "currDay": date.today().day if (today.year, today.month) == (date.today().year, date.today().month) else -1,
-        "calendarForm": calendarChoice(),
-        "categoryForm": categoryChoice(),
-    }
-    return render(request, "tasks/dashboard.html", context)
+    tasks = Task.objects.filter(user=request.user)
+    # Group tasks by date for the calendar
+    tasks_by_date = {}
+    for task in tasks:
+        date_str = task.due_date.strftime('%Y-%m-%d') if task.due_date else None
+        if date_str:
+            if date_str not in tasks_by_date:
+                tasks_by_date[date_str] = []
+            tasks_by_date[date_str].append({
+                'description': task.get_description,
+                'type': task.get_type,
+                'urgency': task.get_urgency
+            })
+    
+    return render(request, "tasks/dashboard.html", {
+        "tasks_by_date": tasks_by_date
+    })
 
 
 def login(request):

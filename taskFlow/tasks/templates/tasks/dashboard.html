@@ -303,7 +303,24 @@
                 <tbody id="calendar-body"></tbody>
             </table>
 
-            {% include 'tasks/dayViewPopUp.html' %} <!-- Calendar Day View Pop Up Section-->
+            <!-- Add this before the dayViewPopUp.html include -->
+            <script>
+                // Convert Django template data to JavaScript
+                const tasksData = {
+                    {% for date, tasks in tasks_by_date.items %}
+                        "{{ date }}": [
+                            {% for task in tasks %}
+                                {
+                                    description: "{{ task.description|escapejs }}",
+                                    type: "{{ task.type|default:'General'|escapejs }}",
+                                    urgency: {{ task.urgency|default:1 }}
+                                },
+                            {% endfor %}
+                        ],
+                    {% endfor %}
+                };
+            </script>
+            {% include 'tasks/dayViewPopUp.html' %}
 
         </div>
     </div>
@@ -337,6 +354,21 @@
             calendarBody += row;
         }
         document.getElementById("calendar-body").innerHTML = calendarBody;
+
+        // Add click event listener to calendar
+        document.querySelector('.calendar-table').addEventListener('click', (event) => {
+            if (event.target.tagName === 'TD' && event.target.textContent.trim() !== '') {
+                const day = event.target.textContent.trim();
+                const month = document.getElementById('calendar-month').textContent;
+                const [monthName, year] = month.split(' ');
+                
+                // Create date string in YYYY-MM-DD format
+                const monthIndex = new Date(`${monthName} 1`).getMonth() + 1;
+                const dateStr = `${year}-${monthIndex.toString().padStart(2, '0')}-${day.padStart(2, '0')}`;
+                
+                showDayView(dateStr);
+            }
+        });
     }
 
     window.onload = generateCalendar;
