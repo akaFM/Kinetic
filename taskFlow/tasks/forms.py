@@ -2,8 +2,8 @@ from django import forms
 from .models import *
 
 class regsiterLogin(forms.Form):
-    username = forms.CharField(label="username", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'}))
-    password = forms.CharField(label="password", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}), max_length=100)
+    username = forms.CharField(label="username", max_length=100, widget=forms.TextInput(attrs={'id': 'login-user','class': 'form-control', 'placeholder': 'Enter your username'}))
+    password = forms.CharField(label="password", widget=forms.PasswordInput(attrs={'id': 'login-password', 'class': 'form-control', 'placeholder': 'Enter your password'}), max_length=100)
 
 
 class TaskForm(forms.ModelForm):

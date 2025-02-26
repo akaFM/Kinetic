@@ -165,3 +165,21 @@ p {
 .auth-links a:hover {
     text-decoration: underline;
 }
+
+
+.incorrect-password-msg
+{
+    font-size: 16px;
+    text-align: right;
+    margin-bottom: 12px;
+    color: red;
+}
+
+.login-password-msg
+{
+    display: none;
+    font-size: 16px;
+    text-align: right;
+    margin-bottom: 12px;
+    color: red;
+}
