@@ -8,3 +8,4 @@ db.sqlite3
 .vscode/
 .idea/
 .DS_Store
+avo.bat
