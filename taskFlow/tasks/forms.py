@@ -8,7 +8,21 @@ class regsiterLogin(forms.Form):
 
 class TaskForm(forms.ModelForm):
     is_recurring = forms.BooleanField(required=False)
-    urgency = forms.IntegerField(min_value=1) # not allowing for negative urgency on the backend
+
+    # not allowing for negative urgency on the backend
+    urgency = forms.IntegerField(
+        min_value=1,
+        max_value=10,
+        initial=1,
+        help_text="On a scale of 1 to 10",
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'min': '1',
+            'max': '10',
+            'value': '1'
+        })
+    )
+    
     repetition_period = forms.ChoiceField(
         choices=RecurringPattern.RepetitionPeriod.choices,
         required=False
