@@ -104,11 +104,15 @@ def login(request):
     if request.method == "POST":
         username = request.POST.get("username", "")
         password = request.POST.get("password", "")
+        
+        #
+        print(username, password)
 
         try:
             user = User.objects.get(username=username)
         except ObjectDoesNotExist:
             if not validate_password(password): # never validate a password for a user that exists, we will lock people out
+                print("password is not valid")
                 return render(request, "tasks/login.html", {
                     "form": regsiterLogin(initial={"username": username}),
                     "msg": ("Password must be 6-20 characters long and contain at least one uppercase letter, "
