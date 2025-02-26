@@ -108,20 +108,22 @@ def login(request):
         try:
             user = User.objects.get(username=username)
         except ObjectDoesNotExist:
-            if not validate_password(password): # never validate a password for a user that exists, we will lock people out
-                return render(request, "tasks/login.html", {
+            if not validate_password(password):  # never validate a password for a user that exists, we will lock people out
+                context = {
                     "form": regsiterLogin(initial={"username": username}),
                     "msg": ("Password must be 6-20 characters long and contain at least one uppercase letter, "
                             "one lowercase letter, one number, and one special character.")
-                })
+                }
+                return render(request, "tasks/login.html", context)
             user = User.objects.create_user(username=username, password=password)
             user.save()
 
         if not check_password(password, user.password):
-            return render(request, "tasks/login.html", {
+            context = {
                 "form": regsiterLogin(initial={"username": username}),
                 "msg": "Incorrect password. Please try again."
-            })
+            }
+            return render(request, "tasks/login.html", context)
 
         django.contrib.auth.login(request, user)
         return HttpResponseRedirect(reverse("index"))
@@ -129,10 +131,11 @@ def login(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
     
-    return render(request, "tasks/login.html", {
+    context = {
         "form": regsiterLogin(),
         "msg": "Enter your login credentials. If you don't have an account, one will be created automatically."
-    })
+    }
+    return render(request, "tasks/login.html", context)
 
 def logout(request):
     django.contrib.auth.logout(request)
@@ -168,4 +171,5 @@ def create_task(request):
     else:
         form = TaskForm()
 
-    return render(request, "tasks/create_task.html", {"form": form})
+    context = {"form": form}
+    return render(request, "tasks/create_task.html", context)
