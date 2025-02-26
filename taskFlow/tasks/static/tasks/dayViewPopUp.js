@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
 function handleCalendarDayOnClick(event)
 {
     const target = event.target;
@@ -25,6 +24,7 @@ function handleCalendarDayOnClick(event)
     }
 }
 
+
 function handleDayViewCloseButtonOnClick()
 {
     const calendarDayView  = document.getElementById('calendar-day-view');
@@ -34,43 +34,88 @@ function handleDayViewCloseButtonOnClick()
     hideElement(calendarDayView);
 }
 
+
 function updateDayView(dateNumber, dayString)
 {
-    const calendarDayView = document.getElementById('calendar-day-view');
+    const calendarDayView        = document.getElementById('calendar-day-view');
+    const calendarTitleMonthYear = document.getElementById('calendar-month').innerText;
+    const [month, year] = calendarTitleMonthYear.split(' ');
     
-    updateDayViewTitle(dateNumber, dayString);
-    getDayViewTasks(); // just creates 12 dummy tasks elements right now for demoing.
+    updateDayViewTitle(dateNumber, dayString, month, year);
+    getDayViewTasks(dateNumber, month, year); 
     showElement(calendarDayView);
 }
 
-function updateDayViewTitle(dateNumber, dayString)
+
+function updateDayViewTitle(dateNumber, dayString, month, year)
 {
-    const dayTitle      = document.getElementById('title-day');
-    const dateTitle     = document.getElementById('title-date');
-    const calendarMonth = document.getElementById('calendar-month');
-    const month         = calendarMonth.innerText;
+    const dayTitle  = document.getElementById('title-day');
+    const dateTitle = document.getElementById('title-date');
 
     // Set the day view pop title to match the day that was clicked on: 
     dayTitle.innerText  = dayString;
-    dateTitle.innerText = `${dateNumber} ${month}`;
+    dateTitle.innerText = `${dateNumber} ${month} ${year}`;
 }
 
-function getDayViewTasks()
+
+function getDayViewTasks(dateNumber, monthStr, yearStr)
 {
+    const day   = dateNumber;
+    const year  = getYearNumber(yearStr);
+    const month = getMonthNumber(monthStr);
+
     const dayViewTasks = document.getElementById('day-view-task-container');
 
-    // just creates 12 dummy tasks elements right now for demoing.
-    for (let i = 0; i < 12; i++) 
-    {
-        const taskContainer = document.createElement('div');
-        taskContainer.classList.add('task-container');
-        const taskText = document.createElement('span');
-        taskText.classList.add('task-text');
-        taskText.textContent = `Task Description ${i + 1}`;  
-        taskContainer.appendChild(taskText);
-        dayViewTasks.appendChild(taskContainer);
-    }
+    // Get tasks from backend for the specific day:
+    fetch(`/tasks/${year}/${month}/${day}/`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.tasks.length > 0)
+                for (let i = 0 ; i < data.tasks.length ; i++) // if day has tasks, then create elements for them.
+                    createTaskElement(dayViewTasks, data.tasks[i].description);
+            else
+                createNoTasksElem(dayViewTasks); // if day has no tasks, then no task elements created.
+        })
+        .catch( error => console.error("Error fetching tasks.", error));
 }
+
+
+function createTaskElement(element, description)
+{
+    const taskContainer = document.createElement('div');
+    taskContainer.classList.add('task-container');
+    const taskText = document.createElement('span');
+    taskText.classList.add('task-text');
+    if (description.length < 50)
+        taskText.textContent = description;  
+    else
+        taskText.textContent = description.slice(0, 49) + "..."; 
+    taskContainer.appendChild(taskText);
+    element.appendChild(taskContainer);
+}
+
+
+function createNoTasksElem(element)
+{
+    const noTask = document.createElement('div');
+    noTask.textContent = 'No tasks.';  
+    element.appendChild(noTask);
+}
+
+
+function getYearNumber(year)
+{
+    return parseInt(year);
+}
+
+
+function getMonthNumber(month)
+{
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    return months.indexOf(month) + 1;
+}
+
 
 function clearDayViewPop()
 {
@@ -78,15 +123,18 @@ function clearDayViewPop()
     dayViewTasks.innerHTML = "";
 }
 
+
 function showElement(element)
 {
     element.style.display = "block";
 }
 
+
 function hideElement(element)
 {
     element.style.display = "none";
 }
+
 
 function getDay(dayOfWeek)
 {
