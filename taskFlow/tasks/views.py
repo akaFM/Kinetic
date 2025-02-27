@@ -42,10 +42,6 @@ def group_tasks_by_day(tasks, year, month):
         task_list[task.due_date.day - 1].append(task)
     return task_list
 
-
-
-
-
 def validate_password(password):
     if not 6 <= len(password) <= 20:
         return False
@@ -79,6 +75,16 @@ def get_next_date(current_date, repetition_period):
     elif repetition_period == RecurringPattern.RepetitionPeriod.YEARLY:
         return current_date.replace(year=current_date.year + 1)
     return current_date
+  
+@login_required()
+def get_day_tasks_description_json(request, year, month, day):
+    tasks_list = Task.objects.filter(user=request.user, due_date__year=year, due_date__month=month, due_date__day=day)
+    # Create JSON for task descriptions 
+    tasks = []
+    for t in tasks_list:
+        task = {"description": t.get_description}
+        tasks.append(task)
+    return JsonResponse({"tasks": tasks})
 
 
 @login_required()
@@ -112,20 +118,22 @@ def login(request):
         try:
             user = User.objects.get(username=username)
         except ObjectDoesNotExist:
-            if not validate_password(password): # never validate a password for a user that exists, we will lock people out
-                return render(request, "tasks/login.html", {
+            if not validate_password(password):  # never validate a password for a user that exists, we will lock people out
+                context = {
                     "form": regsiterLogin(initial={"username": username}),
                     "msg": ("Password must be 6-20 characters long and contain at least one uppercase letter, "
                             "one lowercase letter, one number, and one special character.")
-                })
+                }
+                return render(request, "tasks/login.html", context)
             user = User.objects.create_user(username=username, password=password)
             user.save()
 
         if not check_password(password, user.password):
-            return render(request, "tasks/login.html", {
+            context = {
                 "form": regsiterLogin(initial={"username": username}),
                 "msg": "Incorrect password. Please try again."
-            })
+            }
+            return render(request, "tasks/login.html", context)
 
         django.contrib.auth.login(request, user)
         return HttpResponseRedirect(reverse("index"))
@@ -133,10 +141,11 @@ def login(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
     
-    return render(request, "tasks/login.html", {
+    context = {
         "form": regsiterLogin(),
         "msg": "Enter your login credentials. If you don't have an account, one will be created automatically."
-    })
+    }
+    return render(request, "tasks/login.html", context)
 
 def logout(request):
     django.contrib.auth.logout(request)
@@ -171,15 +180,7 @@ def create_task(request):
             return HttpResponseRedirect(reverse("index"))
     else:
         form = TaskForm()
-
-    return render(request, "tasks/create_task.html", {"form": form})
+        
+    context = {"form": form}
+    return render(request, "tasks/create_task.html", context)
     
-@login_required()
-def get_day_tasks_description_json(request, year, month, day):
-    tasks_list = Task.objects.filter(user=request.user, due_date__year=year, due_date__month=month, due_date__day=day)
-    # Create JSON for task descriptions 
-    tasks = []
-    for t in tasks_list:
-        task = {"description": t.get_description}
-        tasks.append(task)
-    return JsonResponse({"tasks": tasks})
