@@ -17,7 +17,7 @@
         <div class="login-form">
             <h2>Welcome Back!</h2>
             <p>Login to continue managing your tasks efficiently.</p>
-            <form action="{% url 'login' %}" method="post">
+            <form id="login-form" action="{% url 'login' %}" method="post">
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="input-group">
@@ -28,6 +28,12 @@
                         {% endif %}
                     </div>
                 {% endfor %}
+                <div id="invalid-password-msg" class="login-password-msg">
+                    Incorrect password. Try again.
+                </div>
+                {% if msg %}
+                    <div class="incorrect-password-msg">{{ msg }}</div>
+                {% endif %}
                 <button type="submit" class="btn login-btn">Sign In</button>
             </form>
             <div class="auth-links">
