@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class User(AbstractUser):
@@ -41,8 +41,12 @@ class Task(models.Model):
     # only for non-recurring tasks
     description = models.TextField(null=True, blank=True)
     type = models.CharField(max_length=20, choices=TaskType.choices, null=True, blank=True)
-    urgency = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1)])
-
+    urgency = models.IntegerField(
+        null=True, 
+        blank=True, 
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
+        help_text="Task urgency on a scale of 1 to 10"
+    )
     @property
     def get_description(self):
         return self.recurring_pattern.description if self.recurring_pattern else self.description
