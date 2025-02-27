@@ -1,6 +1,8 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinValueValidator
+
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -39,7 +41,7 @@ class Task(models.Model):
     # only for non-recurring tasks
     description = models.TextField(null=True, blank=True)
     type = models.CharField(max_length=20, choices=TaskType.choices, null=True, blank=True)
-    urgency = models.IntegerField(null=True, blank=True)
+    urgency = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1)])
 
     @property
     def get_description(self):
