@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 from datetime import date, datetime, timedelta
 from calendar import monthrange
+from django.http import JsonResponse
 
 from .models import *
 from .forms import *
@@ -40,7 +41,6 @@ def group_tasks_by_day(tasks, year, month):
     for task in tasks:
         task_list[task.due_date.day - 1].append(task)
     return task_list
-
 
 def validate_password(password):
     if not 6 <= len(password) <= 20:
@@ -75,6 +75,16 @@ def get_next_date(current_date, repetition_period):
     elif repetition_period == RecurringPattern.RepetitionPeriod.YEARLY:
         return current_date.replace(year=current_date.year + 1)
     return current_date
+  
+@login_required()
+def get_day_tasks_description_json(request, year, month, day):
+    tasks_list = Task.objects.filter(user=request.user, due_date__year=year, due_date__month=month, due_date__day=day)
+    # Create JSON for task descriptions 
+    tasks = []
+    for t in tasks_list:
+        task = {"description": t.get_description}
+        tasks.append(task)
+    return JsonResponse({"tasks": tasks})
 
 
 @login_required()
@@ -170,6 +180,7 @@ def create_task(request):
             return HttpResponseRedirect(reverse("index"))
     else:
         form = TaskForm()
-
+        
     context = {"form": form}
     return render(request, "tasks/create_task.html", context)
+    
