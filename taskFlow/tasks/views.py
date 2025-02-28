@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from datetime import date, datetime, timedelta
 from calendar import monthrange
 from django.http import JsonResponse
+import json
 
 from .models import *
 from .forms import *
@@ -84,6 +85,7 @@ def get_day_tasks_description_json(request, year, month, day):
     tasks = []
     for t in tasks_list:
         task = {
+            "id": t.id,
             "name": t.name,
             "description": t.get_description,
             "type": t.get_type,
@@ -191,4 +193,18 @@ def create_task(request):
         
     context = {"form": form}
     return render(request, "tasks/create_task.html", context)
+    
+@login_required
+def complete_task(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        task_id = data.get('task_id')
+        try:
+            task = Task.objects.get(id=task_id, user=request.user)
+            task.completed = True
+            task.save()
+            return JsonResponse({'status': 'success'})
+        except Task.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Task not found'}, status=404)
+    return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
     

@@ -90,28 +90,40 @@ function createTaskElement(element, task)
     const taskHeader = document.createElement('div');
     taskHeader.classList.add('task-header');
 
+    // Create header content container
+    const taskHeaderContent = document.createElement('div');
+    taskHeaderContent.classList.add('task-header-content');
+
     // Add task name
     const taskName = document.createElement('div');
     taskName.classList.add('task-name');
     taskName.textContent = task.name;
-    taskHeader.appendChild(taskName);
+    taskHeaderContent.appendChild(taskName);
 
     // Add task urgency
     const taskUrgency = document.createElement('div');
     taskUrgency.classList.add('task-urgency');
     taskUrgency.textContent = `Priority ${task.urgency}`;
-    taskHeader.appendChild(taskUrgency);
+    taskHeaderContent.appendChild(taskUrgency);
+
+    taskHeader.appendChild(taskHeaderContent);
+
+    // Add complete button
+    const completeBtn = document.createElement('button');
+    completeBtn.classList.add('complete-task-btn');
+    completeBtn.innerHTML = '✓';
+    completeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        completeTask(task.id, taskContainer);
+    });
+    taskHeader.appendChild(completeBtn);
 
     taskContainer.appendChild(taskHeader);
 
     // Add task description
     const taskDescription = document.createElement('div');
     taskDescription.classList.add('task-description');
-    if (task.description.length > 150) {
-        taskDescription.textContent = task.description.slice(0, 150) + "...";
-    } else {
-        taskDescription.textContent = task.description;
-    }
+    taskDescription.textContent = task.description;
     taskContainer.appendChild(taskDescription);
 
     // Add task type
@@ -169,4 +181,47 @@ function getDay(dayOfWeek)
 {
     const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday","Sunday"];
     return daysOfWeek[dayOfWeek];
+}
+
+async function completeTask(taskId, taskContainer) {
+    try {
+        const response = await fetch('/tasks/complete/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                task_id: taskId
+            })
+        });
+
+        if (response.ok) {
+            taskContainer.style.opacity = '0';
+            setTimeout(() => {
+                taskContainer.remove();
+                if (!document.querySelector('.task-container')) {
+                    const taskContainer = document.getElementById('day-view-task-container');
+                    createNoTasksElem(taskContainer);
+                }
+            }, 300);
+        }
+    } catch (error) {
+        console.error('Error completing task:', error);
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
