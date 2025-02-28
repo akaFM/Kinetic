@@ -117,7 +117,10 @@ function createTaskElement(element, task)
     if (task.completed) {
         completeBtn.classList.add('completed');
         completeBtn.innerHTML = '✓';
-        completeBtn.disabled = true;
+        completeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            uncompleteTask(task.id, taskContainer);
+        });
     } else {
         completeBtn.innerHTML = '✓';
         completeBtn.addEventListener('click', (e) => {
@@ -213,6 +216,37 @@ async function completeTask(taskId, taskContainer) {
         }
     } catch (error) {
         console.error('Error completing task:', error);
+    }
+}
+
+async function uncompleteTask(taskId, taskContainer) {
+    try {
+        const response = await fetch('/tasks/uncomplete/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                task_id: taskId
+            })
+        });
+
+        if (response.ok) {
+            taskContainer.classList.remove('completed');
+            const completeBtn = taskContainer.querySelector('.complete-task-btn');
+            completeBtn.classList.remove('completed');
+            
+            // Remove old event listener and add new one
+            const newBtn = completeBtn.cloneNode(true);
+            newBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                completeTask(taskId, taskContainer);
+            });
+            completeBtn.parentNode.replaceChild(newBtn, completeBtn);
+        }
+    } catch (error) {
+        console.error('Error uncompleting task:', error);
     }
 }
 

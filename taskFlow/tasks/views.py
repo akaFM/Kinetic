@@ -209,3 +209,17 @@ def complete_task(request):
             return JsonResponse({'status': 'error', 'message': 'Task not found'}, status=404)
     return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
     
+@login_required
+def uncomplete_task(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        task_id = data.get('task_id')
+        try:
+            task = Task.objects.get(id=task_id, user=request.user)
+            task.completed = False
+            task.save()
+            return JsonResponse({'status': 'success'})
+        except Task.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Task not found'}, status=404)
+    return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
+    

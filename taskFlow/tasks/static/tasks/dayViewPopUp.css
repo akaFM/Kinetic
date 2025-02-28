@@ -184,10 +184,14 @@
     transform: scale(1.1);
 }
 
-.complete-task-btn.completed:hover {
+.complete-task-btn.completed {
     background-color: #4CAF50;
-    transform: none;
-    cursor: not-allowed;
+}
+
+.complete-task-btn.completed:hover {
+    background-color: #d32f2f;
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 @media (max-width: 1076px) 
