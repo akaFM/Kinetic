@@ -8,6 +8,12 @@ class regsiterLogin(forms.Form):
 
 class TaskForm(forms.ModelForm):
     is_recurring = forms.BooleanField(required=False)
+    name = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Enter task name.'
+        })
+    )
     urgency = forms.IntegerField( # setting constraints for priority (1-10, inclusive) on the form
         min_value=1,
         max_value=10,
@@ -34,7 +40,7 @@ class TaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ['description', 'type', 'urgency', 'due_date']
+        fields = ['name', 'description', 'type', 'urgency', 'due_date']
         widgets = {
             'due_date': forms.DateInput(attrs={'type': 'date'})
         }
