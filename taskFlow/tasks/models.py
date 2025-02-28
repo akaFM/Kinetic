@@ -8,6 +8,7 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
 class TaskType(models.TextChoices):
+    GENERAL = "General"
     FUN = "Fun"
     WORK = "Work"
     SCHOOL = "School"
@@ -40,7 +41,7 @@ class Task(models.Model):
     
     # only for non-recurring tasks
     description = models.TextField(null=True, blank=True)
-    type = models.CharField(max_length=20, choices=TaskType.choices, null=True, blank=True)
+    type = models.CharField(max_length=20, choices=TaskType.choices, null=True, blank=True, default=TaskType.GENERAL)
     urgency = models.IntegerField(
         null=True, 
         blank=True, 
