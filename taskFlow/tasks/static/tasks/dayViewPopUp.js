@@ -212,7 +212,14 @@ async function completeTask(taskId, taskContainer) {
             taskContainer.classList.add('completed');
             const completeBtn = taskContainer.querySelector('.complete-task-btn');
             completeBtn.classList.add('completed');
-            completeBtn.disabled = true;
+            
+            // BUGFIX: remove old event listener and add new one for uncomplete task functionality !!
+            const newBtn = completeBtn.cloneNode(true);
+            newBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                uncompleteTask(taskId, taskContainer);
+            });
+            completeBtn.parentNode.replaceChild(newBtn, completeBtn);
         }
     } catch (error) {
         console.error('Error completing task:', error);
