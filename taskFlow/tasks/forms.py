@@ -14,6 +14,16 @@ class TaskForm(forms.ModelForm):
             'placeholder': 'Enter task name.'
         })
     )
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'placeholder': 'Enter task description.'
+        })
+    )
+    type = forms.ChoiceField(
+        choices=TaskType.choices,
+        required=True,
+        initial=TaskType.GENERAL
+    )
     urgency = forms.IntegerField( # setting constraints for priority (1-10, inclusive) on the form
         min_value=1,
         max_value=10,
