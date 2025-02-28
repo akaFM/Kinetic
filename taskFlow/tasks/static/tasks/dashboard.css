@@ -58,6 +58,32 @@
     text-overflow: ellipsis;
 }
 
+/* Updated Category Button Styles */
+.category-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background-color: #8B5ED7;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.category-btn:hover {
+    background-color: #A66DD4;
+    transform: translateY(-2px);
+}
+
+.category-btn.active {
+    background-color: #A66DD4;
+    border: 2px solid #fff;
+}
+
 @media (max-width: 768px) {
     .calendar-grid {
         gap: 2px;

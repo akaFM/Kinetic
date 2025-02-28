@@ -16,20 +16,24 @@
         display: flex;
     }
 
-    /* Sidebar Styling */
+    /* Updated Sidebar Styling to look like a floating card */
     .sidebar {
         width: 280px;
-        background: linear-gradient(135deg, #A66DD4, #8B5ED7);
-        color: white;
+        background-color: white;
+        color: #333;
         padding: 20px;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        margin: 20px;
     }
 
     .sidebar h2 {
         font-weight: 600;
+        margin-bottom: 10px;
     }
 
     .sidebar-menu {
@@ -37,30 +41,36 @@
         width: 100%;
     }
 
-    .sidebar-menu a {
+    /* Category Button Styles for sidebar on white background */
+    .category-btn {
         display: block;
-        color: white;
-        font-weight: 500;
-        padding: 10px;
-        text-decoration: none;
-        margin: 10px 0;
+        width: 100%;
+        padding: 10px 20px;
+        margin-bottom: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
         border-radius: 8px;
-        transition: background-color 0.3s;
+        color: #333;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
     }
 
-    .sidebar-menu a:hover {
+    .category-btn:hover {
+        background-color: #e0e0e0;
+        transform: translateY(-2px);
+    }
+
+    .category-btn.active {
         background-color: #8B5ED7;
+        border: 2px solid #8B5ED7;
+        color: white;
     }
 
     .content {
         flex: 1;
         padding: 40px;
-    }
-
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
 
     /* Today's Task Section */
@@ -254,6 +264,32 @@
         border-radius: 4px;
         font-size: 14px;
         background-color: white;
+    }
+
+    /* Updated Category Button Styles */
+    .category-btn {
+        display: block;
+        width: 100%;
+        padding: 10px 20px;
+        margin-bottom: 10px;
+        background-color: #8B5ED7;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .category-btn:hover {
+        background-color: #A66DD4;
+        transform: translateY(-2px);
+    }
+
+    .category-btn.active {
+        background-color: #A66DD4;
+        border: 2px solid #fff;
     }
 </style>
 {% endblock %}
