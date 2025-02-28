@@ -185,12 +185,12 @@
 }
 
 .complete-task-btn.completed {
-    background-color: #4caf50;
+    background-color: #d32f2f;;
     cursor: pointer;
 }
 
 .complete-task-btn.completed:hover {
-    background-color: #d32f2f;
+    background-color: #982424;
 }
 
 .complete-task-btn.completed::before {
