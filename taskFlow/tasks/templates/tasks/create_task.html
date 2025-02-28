@@ -31,6 +31,17 @@
                 }, index * 200);
             });
         });
+
+        // this is to ensure that the frontend does not allow urgency over 10 or under 1
+        document.addEventListener('DOMContentLoaded', function() {
+            const urgencyInput = document.getElementById('id_urgency');
+            
+            urgencyInput.addEventListener('input', function() {
+                let value = parseInt(this.value);
+                if (value > 10) this.value = 10;
+                if (value < 1 || isNaN(value)) this.value = 1;
+            });
+        });
         </script>
 {% endblock %}
 

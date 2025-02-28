@@ -8,6 +8,17 @@ class regsiterLogin(forms.Form):
 
 class TaskForm(forms.ModelForm):
     is_recurring = forms.BooleanField(required=False)
+    urgency = forms.IntegerField( # setting constraints for priority (1-10, inclusive) on the form
+        min_value=1,
+        max_value=10,
+        help_text="On a scale of 1 to 10",
+        widget=forms.NumberInput(attrs={
+            'type': 'number',
+            'min': '1',
+            'max': '10',
+            'placeholder': 'Enter urgency (1-10), 1 being the highest priority.'
+        })
+    )
     repetition_period = forms.ChoiceField(
         choices=RecurringPattern.RepetitionPeriod.choices,
         required=False

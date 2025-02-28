@@ -7,10 +7,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     position: relative;
-    overflow: hidden;
+    padding: 20px 0l
 }
 
 /* Task Creation Box */
