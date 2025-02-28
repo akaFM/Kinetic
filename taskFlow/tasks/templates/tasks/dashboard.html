@@ -237,6 +237,24 @@
     .create-task-btn:hover {
         background-color: #A66DD4;
     }
+
+    .calendar-title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex-grow: 1;
+    }
+
+    #year-select {
+        width: auto;
+        min-width: 100px;
+        padding: 4px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        font-size: 14px;
+        background-color: white;
+    }
 </style>
 {% endblock %}
 
@@ -262,7 +280,6 @@
                 <p>Stay on track with your schedule!</p>
                 <button class="btn btn-primary">Today's Schedule</button>
             </div>
-            <!-- Update the image source to your new image -->
             <img src="{% static 'tasks/Screenshot 2025-02-15 at 4.49.30 PM.png' %}" alt="Task Image">
         </div>
 
@@ -324,7 +341,10 @@
         <div class="calendar-container">
             <div class="calendar-header">
                 <button id="prev-month" class="btn btn-secondary">&lt;</button>
-                <h5 id="calendar-month"></h5>
+                <div class="calendar-title">
+                    <h5 id="calendar-month"></h5>
+                    <select id="year-select" class="form-select"></select>
+                </div>
                 <button id="next-month" class="btn btn-secondary">&gt;</button>
             </div>
             <table class="calendar-table">
@@ -351,6 +371,7 @@
         const daysInMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).getDate();
 
         document.getElementById("calendar-month").innerText = `${monthNames[targetDate.getMonth()]} ${targetDate.getFullYear()}`;
+        document.getElementById("year-select").value = targetDate.getFullYear();
 
         let calendarBody = "";
         let date = 1;
@@ -388,7 +409,31 @@
         generateCalendar(currentDate);
     });
 
-    window.onload = () => generateCalendar(currentDate);
+    window.onload = () => {
+        populateYearDropdown();
+        generateCalendar(currentDate);
+    };
+
+    function populateYearDropdown() {
+        const yearSelect = document.getElementById('year-select');
+        const currentYear = new Date().getFullYear();
+        
+        // add years (5 years before and after current year)
+        for (let year = currentYear - 5; year <= currentYear + 5; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            if (year === currentYear) {
+                option.selected = true;
+            }
+            yearSelect.appendChild(option);
+        }
+
+        yearSelect.addEventListener('change', () => {
+            currentDate.setFullYear(parseInt(yearSelect.value));
+            generateCalendar(currentDate);
+        });
+    }
 
 </script>
 
