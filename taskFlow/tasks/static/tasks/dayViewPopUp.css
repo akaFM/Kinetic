@@ -185,13 +185,18 @@
 }
 
 .complete-task-btn.completed {
-    background-color: #4CAF50;
+    background-color: #4caf50;
+    cursor: pointer;
 }
 
 .complete-task-btn.completed:hover {
     background-color: #d32f2f;
-    transform: scale(1.1);
-    cursor: pointer;
+}
+
+.complete-task-btn.completed::before {
+    content: '×';
+    font-size: 24px;
+    line-height: 1;
 }
 
 @media (max-width: 1076px) 
@@ -214,11 +219,6 @@
     background-color: #e8f5e9;
     border-left: 4px solid #4caf50;
     opacity: 0.8;
-}
-
-.complete-task-btn.completed {
-    background-color: #4caf50;
-    cursor: default;
 }
 
 .task-container.completed .task-name {

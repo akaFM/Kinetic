@@ -116,7 +116,6 @@ function createTaskElement(element, task)
     completeBtn.classList.add('complete-task-btn');
     if (task.completed) {
         completeBtn.classList.add('completed');
-        completeBtn.innerHTML = '✓';
         completeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             uncompleteTask(task.id, taskContainer);
@@ -212,6 +211,7 @@ async function completeTask(taskId, taskContainer) {
             taskContainer.classList.add('completed');
             const completeBtn = taskContainer.querySelector('.complete-task-btn');
             completeBtn.classList.add('completed');
+            completeBtn.innerHTML = '';
             
             // BUGFIX: remove old event listener and add new one for uncomplete task functionality !!
             const newBtn = completeBtn.cloneNode(true);
@@ -243,6 +243,7 @@ async function uncompleteTask(taskId, taskContainer) {
             taskContainer.classList.remove('completed');
             const completeBtn = taskContainer.querySelector('.complete-task-btn');
             completeBtn.classList.remove('completed');
+            completeBtn.innerHTML = '✓';
             
             // Remove old event listener and add new one
             const newBtn = completeBtn.cloneNode(true);
