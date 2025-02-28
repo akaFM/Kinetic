@@ -319,11 +319,8 @@
         <!-- Today's Task Section -->
         <div class="today-task">
             <div>
-                <h3>Today's Tasks</h3>
-                <p>Stay on track with your schedule!</p>
-                <button class="btn btn-primary">Today's Schedule</button>
+                <h3 id="current-time"></h3>
             </div>
-            <img src="{% static 'tasks/Screenshot 2025-02-15 at 4.49.30 PM.png' %}" alt="Task Image">
         </div>
 
         <!-- Create Task Button -->
@@ -457,6 +454,30 @@
         });
     });
 
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentTimeElement = document.getElementById('current-time');
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        // Format hours and minutes to always show two digits.
+        const formattedTime = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2);
+        currentTimeElement.innerText = `${formattedTime}`;
+    });
+
+    function updateTime() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = ('0' + now.getMinutes()).slice(-2);
+        const seconds = ('0' + now.getSeconds()).slice(-2);
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // convert 0 to 12
+        hours = ('0' + hours).slice(-2);
+        const formattedTime = `${hours}:${minutes}:${seconds} ${ampm}`;
+        document.getElementById('current-time').textContent = `${formattedTime} ⌛`;
+    }
+    updateTime(); // Initialize immediately
+    setInterval(updateTime, 1000);
 </script>
 
 {% endblock %}
