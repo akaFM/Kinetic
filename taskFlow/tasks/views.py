@@ -42,6 +42,7 @@ def group_tasks_by_day(tasks, year, month):
         task_list[task.due_date.day - 1].append(task)
     return task_list
 
+
 def validate_password(password):
     if not 6 <= len(password) <= 20:
         return False
@@ -77,17 +78,12 @@ def get_next_date(current_date, repetition_period):
         return current_date.replace(year=current_date.year + 1)
     return current_date
   
+
 @login_required()
 def get_day_tasks_description_json(request, year, month, day):
     category = request.GET.get("category")
-    tasks_queryset = Task.objects.filter(
-        user=request.user, 
-        due_date__year=year, 
-        due_date__month=month, 
-        due_date__day=day
-    )
-    if category and category in TaskType.values:
-        tasks_queryset = filter_tasks_by_category(tasks_queryset, category)
+    tasks_queryset = Task.objects.filter(user=request.user, due_date__year=year, due_date__month=month, due_date__day=day)
+    tasks_queryset = filter_tasks_by_category(tasks_queryset, category)
 
     tasks = [{
         "id": t.id,
@@ -103,18 +99,10 @@ def get_day_tasks_description_json(request, year, month, day):
 
 @login_required()
 def index(request):
-    category = request.POST.get("category")
     today = get_today(request)
-    start_date = today.replace(day=1)
-    end_date = today.replace(day=monthrange(today.year, today.month)[1])
-
-    tasks = Task.objects.filter(due_date__range=(start_date, end_date), user=request.user)
-    tasks = filter_tasks_by_category(tasks, category)
-    task_list = group_tasks_by_day(tasks, today.year, today.month)
-
+    
     context = {
-        "taskList": task_list,
-        "category": category if category and category in TaskType.values else "All Tasks",
+        "category": "All Tasks",
         "month": today.month,
         "year": today.year,
         "currDay": date.today().day if (today.year, today.month) == (date.today().year, date.today().month) else -1,
