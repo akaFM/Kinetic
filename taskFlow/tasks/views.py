@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth import get_user_model
 from datetime import date, datetime, timedelta
 from calendar import monthrange
 from django.http import JsonResponse
@@ -81,7 +80,6 @@ def get_next_date(current_date, repetition_period):
 @login_required()
 def get_day_tasks_description_json(request, year, month, day):
     tasks_list = Task.objects.filter(user=request.user, due_date__year=year, due_date__month=month, due_date__day=day)
-    # Create JSON for task descriptions 
     tasks = []
     for t in tasks_list:
         task = {
