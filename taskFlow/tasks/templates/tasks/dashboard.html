@@ -16,20 +16,24 @@
         display: flex;
     }
 
-    /* Sidebar Styling */
+    /* Updated Sidebar Styling to look like a floating card */
     .sidebar {
         width: 280px;
-        background: linear-gradient(135deg, #A66DD4, #8B5ED7);
-        color: white;
+        background-color: white;
+        color: #333;
         padding: 20px;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        margin: 20px;
     }
 
     .sidebar h2 {
         font-weight: 600;
+        margin-bottom: 10px;
     }
 
     .sidebar-menu {
@@ -37,30 +41,36 @@
         width: 100%;
     }
 
-    .sidebar-menu a {
+    /* Category Button Styles for sidebar on white background */
+    .category-btn {
         display: block;
-        color: white;
-        font-weight: 500;
-        padding: 10px;
-        text-decoration: none;
-        margin: 10px 0;
+        width: 100%;
+        padding: 10px 20px;
+        margin-bottom: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
         border-radius: 8px;
-        transition: background-color 0.3s;
+        color: #333;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
     }
 
-    .sidebar-menu a:hover {
+    .category-btn:hover {
+        background-color: #e0e0e0;
+        transform: translateY(-2px);
+    }
+
+    .category-btn.active {
         background-color: #8B5ED7;
+        border: 2px solid #8B5ED7;
+        color: white;
     }
 
     .content {
         flex: 1;
         padding: 40px;
-    }
-
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
 
     /* Today's Task Section */
@@ -255,6 +265,32 @@
         font-size: 14px;
         background-color: white;
     }
+
+    /* Updated Category Button Styles */
+    .category-btn {
+        display: block;
+        width: 100%;
+        padding: 10px 20px;
+        margin-bottom: 10px;
+        background-color: #8B5ED7;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .category-btn:hover {
+        background-color: #A66DD4;
+        transform: translateY(-2px);
+    }
+
+    .category-btn.active {
+        background-color: #A66DD4;
+        border: 2px solid #fff;
+    }
 </style>
 {% endblock %}
 
@@ -262,12 +298,19 @@
 <div class="dashboard-container">
     <!-- Sidebar -->
     <div class="sidebar">
-        <h2>Dashboard</h2>
+        <h2>Categories</h2>
         <div class="sidebar-menu">
-            <a href="#"><i class="bi bi-house-door"></i> Home</a>
-            <a href="#"><i class="bi bi-calendar-check"></i> Tasks</a>
-            <a href="#"><i class="bi bi-people"></i> Team</a>
-            <a href="#"><i class="bi bi-gear"></i> Settings</a>
+            <form id="categoryForm">
+                {% csrf_token %}
+                <button type="button" class="category-btn {% if not category or category == 'All' %}active{% endif %}" data-category="">
+                    All Tasks
+                </button>
+                {% for value, label in TaskType.choices %}
+                <button type="button" class="category-btn {% if category == value %}active{% endif %}" data-category="{{ value }}">
+                    {{ label }}
+                </button>
+                {% endfor %}
+            </form>
         </div>
     </div>
 
@@ -276,59 +319,7 @@
         <!-- Today's Task Section -->
         <div class="today-task">
             <div>
-                <h3>Today's Tasks</h3>
-                <p>Stay on track with your schedule!</p>
-                <button class="btn btn-primary">Today's Schedule</button>
-            </div>
-            <img src="{% static 'tasks/Screenshot 2025-02-15 at 4.49.30 PM.png' %}" alt="Task Image">
-        </div>
-
-        <!-- Task Categories -->
-        <div class="task-category">
-            <div class="category-card">
-                <h5>Fun</h5>
-                <p>🎮 Relax and Enjoy! </p>
-                <div class="divider"></div>
-                <div class="progress-bar-container">
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <div class="progress-text">
-                        <span>Progress</span>
-                        <span>40%</span>
-                    </div>
-                </div>
-                <div class="days-left">4 days left</div>
-            </div>
-            <div class="category-card">
-                <h5>Work</h5>
-                <p>💼 Stay Productive</p>
-                <div class="divider"></div>
-                <div class="progress-bar-container">
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <div class="progress-text">
-                        <span>Progress</span>
-                        <span>60%</span>
-                    </div>
-                </div>
-                <div class="days-left">3 days left</div>
-            </div>
-            <div class="category-card">
-                <h5>School</h5>
-                <p>📚 Assignments & Projects</p>
-                <div class="divider"></div>
-                <div class="progress-bar-container">
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <div class="progress-text">
-                        <span>Progress</span>
-                        <span>80%</span>
-                    </div>
-                </div>
-                <div class="days-left">2 days left</div>
+                <h3 id="current-time"></h3>
             </div>
         </div>
 
@@ -435,6 +426,58 @@
         });
     }
 
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoryForm = document.getElementById('categoryForm');
+        const categoryButtons = categoryForm.querySelectorAll('.category-btn');
+
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and set active on clicked button
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                // If the day view popup is open, clear its container and refresh its tasks:
+                const calendarDayView = document.getElementById('calendar-day-view');
+                if (calendarDayView && calendarDayView.style.display === "block") {
+                    // Clear the popup container before fetching new tasks
+                    const dayViewTasks = document.getElementById('day-view-task-container');
+                    dayViewTasks.innerHTML = '';
+                    
+                    // Get the currently displayed date from the title (format: "day month year")
+                    const dateTitleElem = document.getElementById('title-date');
+                    if (dateTitleElem && dateTitleElem.innerText.trim() !== "") {
+                        const [day, month, year] = dateTitleElem.innerText.split(' ');
+                        getDayViewTasks(day, month, year);
+                    }
+                }
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentTimeElement = document.getElementById('current-time');
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        // Format hours and minutes to always show two digits.
+        const formattedTime = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2);
+        currentTimeElement.innerText = `${formattedTime}`;
+    });
+
+    function updateTime() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = ('0' + now.getMinutes()).slice(-2);
+        const seconds = ('0' + now.getSeconds()).slice(-2);
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // convert 0 to 12
+        hours = ('0' + hours).slice(-2);
+        const formattedTime = `${hours}:${minutes}:${seconds} ${ampm}`;
+        document.getElementById('current-time').textContent = `${formattedTime} ⌛`;
+    }
+    updateTime(); // Initialize immediately
+    setInterval(updateTime, 1000);
 </script>
 
 {% endblock %}
