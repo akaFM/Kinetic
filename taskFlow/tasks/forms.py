@@ -9,7 +9,7 @@ class regsiterLogin(forms.Form):
 class TaskForm(forms.ModelForm):
     is_recurring = forms.BooleanField(required=False)
     name = forms.CharField(
-        max_length=200,
+        max_length=70,
         widget=forms.TextInput(attrs={
             'placeholder': 'Enter task name.',
             'maxlength': '200',
