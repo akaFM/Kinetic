@@ -58,30 +58,34 @@ function updateDayViewTitle(dateNumber, dayString, month, year)
 }
 
 
-function getDayViewTasks(dateNumber, monthStr, yearStr)
-{
-    const day   = dateNumber;
-    const year  = getYearNumber(yearStr);
+function getDayViewTasks(dateNumber, monthStr, yearStr) {
+    const day = dateNumber;
+    const year = getYearNumber(yearStr);
     const month = getMonthNumber(monthStr);
 
     const dayViewTasks = document.getElementById('day-view-task-container');
+    dayViewTasks.innerHTML = ""; // Clear container once before fetching
 
-    // Get tasks from backend for the specific day:
-    fetch(`/tasks/${year}/${month}/${day}/`)
+    // Retrieve the currently selected category properly
+    const categoryForm = document.getElementById('categoryForm');
+    const activeButton = categoryForm.querySelector('.category-btn.active');
+    const category = activeButton ? activeButton.getAttribute('data-category') : '';
+
+    // Construct the URL with the category query parameter if available
+    const baseUrl = `/tasks/${year}/${month}/${day}/`;
+    const url = category ? `${baseUrl}?category=${encodeURIComponent(category)}` : baseUrl;
+
+    fetch(url)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            // Do not clear the container again
             if (data.tasks.length > 0) {
-                // if day has tasks, then create elements for them.
-                // sort tasks by urgency (priority 1 at top, 10 at bottom, for example)
-                const sortedTasks = data.tasks.sort((a, b) => a.urgency - b.urgency); // i wanted to use a lambda function but this isnt python :((
-                
-                // Create elements for sorted tasks
+                const sortedTasks = data.tasks.sort((a, b) => a.urgency - b.urgency);
                 sortedTasks.forEach(task => {
                     createTaskElement(dayViewTasks, task);
                 });
             } else {
-                createNoTasksElem(dayViewTasks); // if day has no tasks, then no task elements created.
+                createNoTasksElem(dayViewTasks);
             }
         })
         .catch(error => console.error("Error fetching tasks.", error));

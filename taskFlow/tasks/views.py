@@ -79,18 +79,25 @@ def get_next_date(current_date, repetition_period):
   
 @login_required()
 def get_day_tasks_description_json(request, year, month, day):
-    tasks_list = Task.objects.filter(user=request.user, due_date__year=year, due_date__month=month, due_date__day=day)
-    tasks = []
-    for t in tasks_list:
-        task = {
-            "id": t.id,
-            "name": t.name,
-            "description": t.get_description,
-            "type": t.get_type,
-            "urgency": t.get_urgency,
-            "completed": t.completed
-        }
-        tasks.append(task)
+    category = request.GET.get("category")
+    tasks_queryset = Task.objects.filter(
+        user=request.user, 
+        due_date__year=year, 
+        due_date__month=month, 
+        due_date__day=day
+    )
+    if category and category in TaskType.values:
+        tasks_queryset = filter_tasks_by_category(tasks_queryset, category)
+
+    tasks = [{
+        "id": t.id,
+        "name": t.name,
+        "description": t.get_description,
+        "type": t.get_type,
+        "urgency": t.get_urgency,
+        "completed": t.completed
+    } for t in tasks_queryset]
+    
     return JsonResponse({"tasks": tasks})
 
 
@@ -113,6 +120,7 @@ def index(request):
         "currDay": date.today().day if (today.year, today.month) == (date.today().year, date.today().month) else -1,
         "calendarForm": calendarChoice(),
         "categoryForm": categoryChoice(),
+        "TaskType": TaskType,
     }
     return render(request, "tasks/dashboard.html", context)
 
@@ -220,4 +228,4 @@ def uncomplete_task(request):
         except Task.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Task not found'}, status=404)
     return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
-    
+
