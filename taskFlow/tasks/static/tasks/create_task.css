@@ -98,6 +98,7 @@ input:focus, select:focus {
 /* Recurring Task Fields */
 #recurring-fields {
     margin-top: 20px;
+    margin-bottom: 20px;
     background: rgba(255, 255, 255, 0.7);
     padding: 20px;
     border-radius: 8px;

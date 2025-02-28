@@ -16,7 +16,8 @@ class TaskForm(forms.ModelForm):
     )
     description = forms.CharField(
         widget=forms.Textarea(attrs={
-            'placeholder': 'Enter task description.'
+            'placeholder': 'Enter task description.',
+            'style': 'padding: 10px;'
         })
     )
     type = forms.ChoiceField(
