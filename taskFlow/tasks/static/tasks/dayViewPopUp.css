@@ -184,6 +184,12 @@
     transform: scale(1.1);
 }
 
+.complete-task-btn.completed:hover {
+    background-color: #4CAF50;
+    transform: none;
+    cursor: not-allowed;
+}
+
 @media (max-width: 1076px) 
 {
   .day-view-container .day-view-content 
@@ -198,4 +204,28 @@
   {
     transform: scale(0.7);
   }
+}
+
+.task-container.completed {
+    background-color: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    opacity: 0.8;
+}
+
+.complete-task-btn.completed {
+    background-color: #4caf50;
+    cursor: default;
+}
+
+.task-container.completed .task-name {
+    text-decoration: line-through;
+    color: #4caf50;
+}
+
+.task-container.completed .task-urgency {
+    background-color: #4caf50;
+}
+
+.task-container.completed .task-type {
+    color: #4caf50;
 }

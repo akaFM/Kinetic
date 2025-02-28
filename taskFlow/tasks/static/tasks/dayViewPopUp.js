@@ -85,6 +85,9 @@ function createTaskElement(element, task)
 {
     const taskContainer = document.createElement('div');
     taskContainer.classList.add('task-container');
+    if (task.completed) {
+        taskContainer.classList.add('completed');
+    }
 
     // Create task header
     const taskHeader = document.createElement('div');
@@ -111,11 +114,17 @@ function createTaskElement(element, task)
     // Add complete button
     const completeBtn = document.createElement('button');
     completeBtn.classList.add('complete-task-btn');
-    completeBtn.innerHTML = '✓';
-    completeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        completeTask(task.id, taskContainer);
-    });
+    if (task.completed) {
+        completeBtn.classList.add('completed');
+        completeBtn.innerHTML = '✓';
+        completeBtn.disabled = true;
+    } else {
+        completeBtn.innerHTML = '✓';
+        completeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            completeTask(task.id, taskContainer);
+        });
+    }
     taskHeader.appendChild(completeBtn);
 
     taskContainer.appendChild(taskHeader);
@@ -197,14 +206,10 @@ async function completeTask(taskId, taskContainer) {
         });
 
         if (response.ok) {
-            taskContainer.style.opacity = '0';
-            setTimeout(() => {
-                taskContainer.remove();
-                if (!document.querySelector('.task-container')) {
-                    const taskContainer = document.getElementById('day-view-task-container');
-                    createNoTasksElem(taskContainer);
-                }
-            }, 300);
+            taskContainer.classList.add('completed');
+            const completeBtn = taskContainer.querySelector('.complete-task-btn');
+            completeBtn.classList.add('completed');
+            completeBtn.disabled = true;
         }
     } catch (error) {
         console.error('Error completing task:', error);
