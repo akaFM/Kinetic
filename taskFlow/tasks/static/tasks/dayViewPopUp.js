@@ -71,13 +71,20 @@ function getDayViewTasks(dateNumber, monthStr, yearStr)
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            if (data.tasks.length > 0)
-                for (let i = 0 ; i < data.tasks.length ; i++) // if day has tasks, then create elements for them.
-                    createTaskElement(dayViewTasks, data.tasks[i]);
-            else
+            if (data.tasks.length > 0) {
+                // if day has tasks, then create elements for them.
+                // sort tasks by urgency (priority 1 at top, 10 at bottom, for example)
+                const sortedTasks = data.tasks.sort((a, b) => a.urgency - b.urgency); // i wanted to use a lambda function but this isnt python :((
+                
+                // Create elements for sorted tasks
+                sortedTasks.forEach(task => {
+                    createTaskElement(dayViewTasks, task);
+                });
+            } else {
                 createNoTasksElem(dayViewTasks); // if day has no tasks, then no task elements created.
+            }
         })
-        .catch( error => console.error("Error fetching tasks.", error));
+        .catch(error => console.error("Error fetching tasks.", error));
 }
 
 
