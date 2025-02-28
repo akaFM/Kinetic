@@ -85,7 +85,9 @@ def get_day_tasks_description_json(request, year, month, day):
     for t in tasks_list:
         task = {
             "name": t.name,
-            "description": t.get_description
+            "description": t.get_description,
+            "type": t.get_type,
+            "urgency": t.get_urgency
         }
         tasks.append(task)
     return JsonResponse({"tasks": tasks})

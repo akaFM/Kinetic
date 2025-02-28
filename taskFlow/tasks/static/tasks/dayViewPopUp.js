@@ -73,7 +73,7 @@ function getDayViewTasks(dateNumber, monthStr, yearStr)
             console.log(data);
             if (data.tasks.length > 0)
                 for (let i = 0 ; i < data.tasks.length ; i++) // if day has tasks, then create elements for them.
-                    createTaskElement(dayViewTasks, data.tasks[i].description);
+                    createTaskElement(dayViewTasks, data.tasks[i]);
             else
                 createNoTasksElem(dayViewTasks); // if day has no tasks, then no task elements created.
         })
@@ -81,17 +81,45 @@ function getDayViewTasks(dateNumber, monthStr, yearStr)
 }
 
 
-function createTaskElement(element, description)
+function createTaskElement(element, task)
 {
     const taskContainer = document.createElement('div');
     taskContainer.classList.add('task-container');
-    const taskText = document.createElement('span');
-    taskText.classList.add('task-text');
-    if (description.length < 50)
-        taskText.textContent = description;  
-    else
-        taskText.textContent = description.slice(0, 49) + "..."; 
-    taskContainer.appendChild(taskText);
+
+    // Create task header
+    const taskHeader = document.createElement('div');
+    taskHeader.classList.add('task-header');
+
+    // Add task name
+    const taskName = document.createElement('div');
+    taskName.classList.add('task-name');
+    taskName.textContent = task.name;
+    taskHeader.appendChild(taskName);
+
+    // Add task urgency
+    const taskUrgency = document.createElement('div');
+    taskUrgency.classList.add('task-urgency');
+    taskUrgency.textContent = `Priority ${task.urgency}`;
+    taskHeader.appendChild(taskUrgency);
+
+    taskContainer.appendChild(taskHeader);
+
+    // Add task description
+    const taskDescription = document.createElement('div');
+    taskDescription.classList.add('task-description');
+    if (task.description.length > 150) {
+        taskDescription.textContent = task.description.slice(0, 150) + "...";
+    } else {
+        taskDescription.textContent = task.description;
+    }
+    taskContainer.appendChild(taskDescription);
+
+    // Add task type
+    const taskType = document.createElement('div');
+    taskType.classList.add('task-type');
+    taskType.textContent = `Type: ${task.type}`;
+    taskContainer.appendChild(taskType);
+
     element.appendChild(taskContainer);
 }
 
@@ -99,7 +127,8 @@ function createTaskElement(element, description)
 function createNoTasksElem(element)
 {
     const noTask = document.createElement('div');
-    noTask.textContent = 'No tasks.';  
+    noTask.classList.add('no-tasks');
+    noTask.textContent = 'No tasks scheduled for this day.';
     element.appendChild(noTask);
 }
 
