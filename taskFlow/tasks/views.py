@@ -57,7 +57,7 @@ def create_recurring_tasks(user, pattern):
     while current_date <= pattern.end_date:
         Task.objects.create(
             user=user,
-            name=pattern.name
+            name=pattern.name,
             due_date=current_date,
             recurring_pattern=pattern,
         )
