@@ -71,6 +71,7 @@ h2 {
     transform: translateY(20px);
     transition: opacity 0.6s ease, transform 0.6s ease;
     margin-bottom: 20px;
+    position: relative;
 }
 
 /* Animation when elements appear */
@@ -98,6 +99,7 @@ input:focus, select:focus {
 /* Recurring Task Fields */
 #recurring-fields {
     margin-top: 20px;
+    margin-bottom: 20px;
     background: rgba(255, 255, 255, 0.7);
     padding: 20px;
     border-radius: 8px;
@@ -158,4 +160,12 @@ body::before {
     to {
         transform: translateY(10px);
     }
+}
+
+.char-counter {
+    display: block;
+    text-align: right;
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 4px;
 }

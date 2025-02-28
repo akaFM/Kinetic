@@ -57,6 +57,7 @@ def create_recurring_tasks(user, pattern):
     while current_date <= pattern.end_date:
         Task.objects.create(
             user=user,
+            name=pattern.name,
             due_date=current_date,
             recurring_pattern=pattern,
         )
@@ -82,7 +83,10 @@ def get_day_tasks_description_json(request, year, month, day):
     # Create JSON for task descriptions 
     tasks = []
     for t in tasks_list:
-        task = {"description": t.get_description}
+        task = {
+            "name": t.name,
+            "description": t.get_description
+        }
         tasks.append(task)
     return JsonResponse({"tasks": tasks})
 
@@ -161,6 +165,7 @@ def create_task(request):
                 end_date = min(form.cleaned_data["end_date"], start_date + timedelta(days=5 * 365)) # cap recurring tasks at 5 years
                 pattern = RecurringPattern.objects.create(
                     user=request.user,
+                    name=form.cleaned_data["name"],
                     description=form.cleaned_data["description"],
                     type=form.cleaned_data["type"],
                     urgency=form.cleaned_data["urgency"],
@@ -172,6 +177,7 @@ def create_task(request):
             else:
                 Task.objects.create(
                     user=request.user,
+                    name=form.cleaned_data["name"],
                     description=form.cleaned_data["description"],
                     type=form.cleaned_data["type"],
                     urgency=form.cleaned_data["urgency"],

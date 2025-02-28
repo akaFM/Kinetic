@@ -23,6 +23,7 @@ class RecurringPattern(models.Model):
         YEARLY = "Yearly"
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recurring_patterns")
+    name = models.CharField(max_length=200, default="Untitled Recurring Task")
     description = models.TextField(default="")
     type = models.CharField(max_length=20, choices=TaskType.choices, default=TaskType.OTHER)
     urgency = models.IntegerField(default=3)
@@ -34,6 +35,7 @@ class RecurringPattern(models.Model):
 class Task(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
+    name = models.CharField(max_length=200, default="Untitled Task")
     due_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(default=False)
