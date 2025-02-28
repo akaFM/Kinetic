@@ -11,13 +11,18 @@ class TaskForm(forms.ModelForm):
     name = forms.CharField(
         max_length=200,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Enter task name.'
+            'placeholder': 'Enter task name.',
+            'maxlength': '200',
+            'data-counter': 'name-counter'
         })
     )
     description = forms.CharField(
+        max_length=1000,
         widget=forms.Textarea(attrs={
             'placeholder': 'Enter task description.',
-            'style': 'padding: 10px;'
+            'style': 'padding: 10px;',
+            'maxlength': '1000',
+            'data-counter': 'description-counter'
         })
     )
     type = forms.ChoiceField(
