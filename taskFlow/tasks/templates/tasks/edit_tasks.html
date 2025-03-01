@@ -1,0 +1,336 @@
+{% extends "tasks/base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+    .container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .task-list {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .task-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        transition: background-color 0.3s;
+    }
+
+    .task-item:hover {
+        background-color: #F4F2FC;
+    }
+
+    .task-item:last-child {
+        border-bottom: none;
+    }
+
+    .task-info h5 {
+        margin: 0;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .task-info p {
+        margin: 5px 0 0;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .task-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .edit-btn, .delete-btn {
+        padding: 8px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: transform 0.2s, background-color 0.3s;
+    }
+
+    .edit-btn {
+        background-color: #8B5ED7;
+        color: white;
+    }
+
+    .edit-btn:hover {
+        background-color: #A66DD4;
+        transform: translateY(-2px);
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .delete-btn:hover {
+        background-color: #bb2d3b;
+        transform: translateY(-2px);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+
+    .task-section {
+        margin-bottom: 40px;
+    }
+
+    .section-title {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+    }
+
+    .task-details {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 5px;
+    }
+
+    .date-range {
+        font-size: 0.85rem;
+        color: #8B5ED7;
+        margin-top: 5px;
+    }
+
+    .completed-badge, .pending-badge {
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+
+    .completed-badge {
+        background-color: #198754;
+        color: white;
+    }
+
+    .pending-badge {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .task-item.recurring {
+        border-left: 4px solid #8B5ED7;
+    }
+
+    .edit-field {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        background-color: white;
+        color: #333;
+        transition: all 0.3s ease;
+        margin: 5px 0;
+    }
+
+    .edit-field:focus {
+        outline: none;
+        border-color: #8B5ED7;
+        box-shadow: 0 0 0 2px rgba(139, 94, 215, 0.2);
+    }
+
+    .description-field {
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    .task-description {
+        color: #666;
+        font-size: 0.9rem;
+        margin: 8px 0;
+        white-space: pre-line;
+    }
+
+    .save-btn, .cancel-btn {
+        padding: 8px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .save-btn {
+        background-color: #8B5ED7;
+        color: white;
+    }
+
+    .save-btn:hover {
+        background-color: #A66DD4;
+        transform: translateY(-2px);
+    }
+
+    .cancel-btn {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .cancel-btn:hover {
+        background-color: #5c636a;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2 class="page-title">Edit Tasks</h2>
+    
+    <!-- One-time Tasks Section -->
+    <div class="task-section">
+        <h3 class="section-title">One-time Tasks</h3>
+        <div class="task-list">
+            {% for task in one_time_tasks %}
+            <div class="task-item" id="task-{{ task.id }}">
+                <form method="POST" action="{% url 'edit_tasks' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="task_id" value="{{ task.id }}">
+                    <input type="hidden" name="is_recurring" value="false">
+                    <div class="task-info">
+                        <h5 class="task-name">{{ task.name }}</h5>
+                        <input type="text" name="name" value="{{ task.name }}" class="edit-field" style="display: none;">
+                        
+                        <p class="task-description">{{ task.description }}</p>
+                        <textarea name="description" class="edit-field description-field" style="display: none;">{{ task.description }}</textarea>
+                        
+                        <p>Due: <span class="due-date">{{ task.due_date }}</span></p>
+                        <input type="date" name="due_date" value="{{ task.due_date|date:'Y-m-d' }}" class="edit-field" style="display: none;">
+                        
+                        <p class="task-details">
+                            Type: 
+                            <span class="task-type">{{ task.type }}</span>
+                            <select name="type" class="edit-field" style="display: none;">
+                                {% for value, label in TaskType.choices %}
+                                    <option value="{{ value }}" {% if task.type == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            | 
+                            Urgency: 
+                            <span class="task-urgency">{{ task.urgency }}</span>
+                            <input type="number" name="urgency" value="{{ task.urgency }}" min="1" max="10" class="edit-field" style="display: none;">
+                        </p>
+                    </div>
+                    <div class="task-actions">
+                        <button type="button" class="edit-btn" onclick="toggleEdit('{{ task.id }}', false)">Edit</button>
+                        <button type="submit" class="save-btn" style="display: none;">Save</button>
+                        <button type="button" class="cancel-btn" style="display: none;" onclick="cancelEdit('{{ task.id }}')">Cancel</button>
+                        <button type="submit" name="action" value="true" class="delete-btn">Delete</button>
+                    </div>
+                </form>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <p>No one-time tasks found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Recurring Tasks Section -->
+    <div class="task-section">
+        <h3 class="section-title">Recurring Tasks</h3>
+        <div class="task-list">
+            {% for pattern in recurring_patterns %}
+            <div class="task-item recurring" id="pattern-{{ pattern.id }}">
+                <form method="POST" action="{% url 'edit_tasks' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="task_id" value="{{ pattern.id }}">
+                    <input type="hidden" name="is_recurring" value="true">
+                    <div class="task-info">
+                        <h5 class="task-name">{{ pattern.name }}</h5>
+                        <input type="text" name="name" value="{{ pattern.name }}" class="edit-field" style="display: none;">
+                        
+                        <p>Period: <span class="task-period">{{ pattern.repetition_period }}</span></p>
+                        
+                        <p class="task-details">
+                            Type: 
+                            <span class="task-type">{{ pattern.type }}</span>
+                            <select name="type" class="edit-field" style="display: none;">
+                                {% for value, label in TaskType.choices %}
+                                    <option value="{{ value }}" {% if pattern.type == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            | 
+                            Urgency: 
+                            <span class="task-urgency">{{ pattern.urgency }}</span>
+                            <input type="number" name="urgency" value="{{ pattern.urgency }}" min="1" max="10" class="edit-field" style="display: none;">
+                        </p>
+                        <p class="date-range">
+                            {{ pattern.start_date }} to {{ pattern.end_date }}
+                        </p>
+                    </div>
+                    <div class="task-actions">
+                        <button type="button" class="edit-btn" onclick="toggleEdit('{{ pattern.id }}', true)">Edit Pattern</button>
+                        <button type="submit" class="save-btn" style="display: none;">Save</button>
+                        <button type="button" class="cancel-btn" style="display: none;" onclick="cancelEdit('{{ pattern.id }}', true)">Cancel</button>
+                        <button type="submit" name="action" value="true" class="delete-btn">Delete All</button>
+                    </div>
+                </form>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <p>No recurring tasks found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleEdit(id, isRecurring) {
+        const container = document.getElementById(isRecurring ? `pattern-${id}` : `task-${id}`);
+        const fields = container.getElementsByClassName('edit-field');
+        const displays = container.querySelectorAll('.task-name, .due-date, .task-type, .task-urgency, .task-description');
+        const editBtn = container.querySelector('.edit-btn');
+        const saveBtn = container.querySelector('.save-btn');
+        const cancelBtn = container.querySelector('.cancel-btn');
+
+        Array.from(fields).forEach(field => field.style.display = 'inline-block');
+        Array.from(displays).forEach(display => display.style.display = 'none');
+        
+        editBtn.style.display = 'none';
+        saveBtn.style.display = 'inline-block';
+        cancelBtn.style.display = 'inline-block';
+    }
+
+    function cancelEdit(id, isRecurring) {
+        const container = document.getElementById(isRecurring ? `pattern-${id}` : `task-${id}`);
+        const fields = container.getElementsByClassName('edit-field');
+        const displays = container.querySelectorAll('.task-name, .due-date, .task-type, .task-urgency');
+        const editBtn = container.querySelector('.edit-btn');
+        const saveBtn = container.querySelector('.save-btn');
+        const cancelBtn = container.querySelector('.cancel-btn');
+
+        // Hide edit fields, show display text
+        Array.from(fields).forEach(field => field.style.display = 'none');
+        Array.from(displays).forEach(display => display.style.display = 'inline');
+        
+        // Show edit button, hide save/cancel buttons
+        editBtn.style.display = 'inline-block';
+        saveBtn.style.display = 'none';
+        cancelBtn.style.display = 'none';
+    }
+</script>
+{% endblock %}

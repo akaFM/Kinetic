@@ -10,4 +10,5 @@ urlpatterns = [
      path('tasks/<int:year>/<int:month>/<int:day>/', views.get_day_tasks_description_json, name='get_day_tasks_description_json'),
      path('tasks/complete/', views.complete_task, name='complete_task'),
      path('tasks/uncomplete/', views.uncomplete_task, name='uncomplete_task'),
+     path("edit-tasks", views.edit_tasks, name="edit_tasks"),
  ]

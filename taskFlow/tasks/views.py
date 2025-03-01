@@ -217,3 +217,50 @@ def uncomplete_task(request):
             return JsonResponse({'status': 'error', 'message': 'Task not found'}, status=404)
     return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
 
+@login_required()
+def edit_tasks(request):
+    if request.method == "POST":
+        task_id = request.POST.get("task_id")
+        is_recurring = request.POST.get("is_recurring") == "true"
+        toDelete = request.POST.get("action") == "true"
+        
+        try:
+            if is_recurring:
+                pattern = RecurringPattern.objects.get(id=task_id, user=request.user)
+                if toDelete:
+                    Task.objects.filter(recurring_pattern=pattern).delete()
+                    pattern.delete()
+                else:
+                    pattern.name = request.POST.get("name", pattern.name)
+                    pattern.description = request.POST.get("description", pattern.description)
+                    pattern.type = request.POST.get("type", pattern.type)
+                    pattern.urgency = request.POST.get("urgency", pattern.urgency)
+                    pattern.save()
+                    
+                    Task.objects.filter(recurring_pattern=pattern).update(name=pattern.name, description=pattern.description, type=pattern.type, urgency=pattern.urgency)
+            else:
+                task = Task.objects.get(id=task_id, user=request.user)
+                if toDelete:
+                    task.delete()
+                else:
+                    task.name = request.POST.get("name", task.name)
+                    task.description = request.POST.get("description", task.description)
+                    task.type = request.POST.get("type", task.type)
+                    task.urgency = request.POST.get("urgency", task.urgency)
+                    task.due_date = datetime.strptime(request.POST.get("due_date", task.due_date.strftime('%Y-%m-%d')), '%Y-%m-%d').date()
+                    task.save()
+            
+            return HttpResponseRedirect(reverse("edit_tasks"))
+            
+        except (Task.DoesNotExist, RecurringPattern.DoesNotExist):
+            pass
+    
+    one_time_tasks = Task.objects.filter(user=request.user, recurring_pattern__isnull=True).order_by('due_date')
+    recurring_patterns = RecurringPattern.objects.filter(user=request.user).order_by('start_date')
+    
+    context = {
+        "one_time_tasks": one_time_tasks,
+        "recurring_patterns": recurring_patterns,
+        "TaskType": TaskType,
+    }
+    return render(request, "tasks/edit_tasks.html", context)
