@@ -84,6 +84,20 @@
     border: 2px solid #fff;
 }
 
+.sign-out-btn {
+    background-color: #A66DD4; /* Red color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.sign-out-btn:hover {
+    background-color: #d32f2f;
+}
+
+
 @media (max-width: 768px) {
     .calendar-grid {
         gap: 2px;

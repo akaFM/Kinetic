@@ -312,8 +312,13 @@
                 {% endfor %}
             </form>
         </div>
+        <!-- Sign Out Button -->
+        <div class="sign-out">
+            <form action="{% url 'logout' %}" method="get">
+                <button class="sign-out-btn" type="submit">Sign Out</button>
+            </form>
+        </div>
     </div>
-
     <!-- Main Content -->
     <div class="content">
         <!-- Today's Task Section -->
