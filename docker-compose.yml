@@ -1,0 +1,35 @@
+services:
+  web:
+    build: .
+    command: sh -c "python manage.py makemigrations tasks && python manage.py migrate --run-syncdb && exec gunicorn --bind 0.0.0.0:8000 taskFlow.wsgi"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=insecure-dev-key-123
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17.4-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 20s
+      timeout: 20s
+      retries: 5
+
+volumes:
+  postgres_data:
