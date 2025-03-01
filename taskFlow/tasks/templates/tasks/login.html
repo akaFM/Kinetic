@@ -3,7 +3,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'tasks/login.css' %}">
-    <script defer src="{% static 'tasks/login.js' %}"></script>
+    <script defer src="{% static 'tasks/js/login.js' %}"></script>
 {% endblock %}
 
 {% block title %}Login{% endblock %}
@@ -11,9 +11,6 @@
 {% block body %}
 <div class="login-container">
     <div class="login-box">
-        <div class="login-illustration">
-            <img src="{% static 'tasks/login-illustration.svg' %}" alt="Login Illustration">
-        </div>
         <div class="login-form">
             <h2>Welcome Back!</h2>
             <p>Login to continue managing your tasks efficiently.</p>
@@ -28,17 +25,12 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-                <div id="invalid-password-msg" class="login-password-msg">
-                    Incorrect password. Try again.
-                </div>
+
                 {% if msg %}
                     <div class="incorrect-password-msg">{{ msg }}</div>
                 {% endif %}
                 <button type="submit" class="btn login-btn">Sign In</button>
             </form>
-            <div class="auth-links">
-                <a href="#">Forgot password?</a> | <a href="#">Create an account</a>
-            </div>
         </div>
     </div>
 </div>
