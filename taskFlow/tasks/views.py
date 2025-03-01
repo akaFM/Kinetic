@@ -42,6 +42,7 @@ def group_tasks_by_day(tasks, year, month):
         task_list[task.due_date.day - 1].append(task)
     return task_list
 
+
 def validate_password(password):
     if not 6 <= len(password) <= 20:
         return False
@@ -77,17 +78,12 @@ def get_next_date(current_date, repetition_period):
         return current_date.replace(year=current_date.year + 1)
     return current_date
   
+
 @login_required()
 def get_day_tasks_description_json(request, year, month, day):
     category = request.GET.get("category")
-    tasks_queryset = Task.objects.filter(
-        user=request.user, 
-        due_date__year=year, 
-        due_date__month=month, 
-        due_date__day=day
-    )
-    if category and category in TaskType.values:
-        tasks_queryset = filter_tasks_by_category(tasks_queryset, category)
+    tasks_queryset = Task.objects.filter(user=request.user, due_date__year=year, due_date__month=month, due_date__day=day)
+    tasks_queryset = filter_tasks_by_category(tasks_queryset, category)
 
     tasks = [{
         "id": t.id,
@@ -103,18 +99,10 @@ def get_day_tasks_description_json(request, year, month, day):
 
 @login_required()
 def index(request):
-    category = request.POST.get("category")
     today = get_today(request)
-    start_date = today.replace(day=1)
-    end_date = today.replace(day=monthrange(today.year, today.month)[1])
-
-    tasks = Task.objects.filter(due_date__range=(start_date, end_date), user=request.user)
-    tasks = filter_tasks_by_category(tasks, category)
-    task_list = group_tasks_by_day(tasks, today.year, today.month)
-
+    
     context = {
-        "taskList": task_list,
-        "category": category if category and category in TaskType.values else "All Tasks",
+        "category": "All Tasks",
         "month": today.month,
         "year": today.year,
         "currDay": date.today().day if (today.year, today.month) == (date.today().year, date.today().month) else -1,
@@ -229,3 +217,50 @@ def uncomplete_task(request):
             return JsonResponse({'status': 'error', 'message': 'Task not found'}, status=404)
     return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
 
+@login_required()
+def edit_tasks(request):
+    if request.method == "POST":
+        task_id = request.POST.get("task_id")
+        is_recurring = request.POST.get("is_recurring") == "true"
+        toDelete = request.POST.get("action") == "true"
+        
+        try:
+            if is_recurring:
+                pattern = RecurringPattern.objects.get(id=task_id, user=request.user)
+                if toDelete:
+                    Task.objects.filter(recurring_pattern=pattern).delete()
+                    pattern.delete()
+                else:
+                    pattern.name = request.POST.get("name", pattern.name)
+                    pattern.description = request.POST.get("description", pattern.description)
+                    pattern.type = request.POST.get("type", pattern.type)
+                    pattern.urgency = request.POST.get("urgency", pattern.urgency)
+                    pattern.save()
+                    
+                    Task.objects.filter(recurring_pattern=pattern).update(name=pattern.name, description=pattern.description, type=pattern.type, urgency=pattern.urgency)
+            else:
+                task = Task.objects.get(id=task_id, user=request.user)
+                if toDelete:
+                    task.delete()
+                else:
+                    task.name = request.POST.get("name", task.name)
+                    task.description = request.POST.get("description", task.description)
+                    task.type = request.POST.get("type", task.type)
+                    task.urgency = request.POST.get("urgency", task.urgency)
+                    task.due_date = datetime.strptime(request.POST.get("due_date", task.due_date.strftime('%Y-%m-%d')), '%Y-%m-%d').date()
+                    task.save()
+            
+            return HttpResponseRedirect(reverse("edit_tasks"))
+            
+        except (Task.DoesNotExist, RecurringPattern.DoesNotExist):
+            pass
+    
+    one_time_tasks = Task.objects.filter(user=request.user, recurring_pattern__isnull=True).order_by('due_date')
+    recurring_patterns = RecurringPattern.objects.filter(user=request.user).order_by('start_date')
+    
+    context = {
+        "one_time_tasks": one_time_tasks,
+        "recurring_patterns": recurring_patterns,
+        "TaskType": TaskType,
+    }
+    return render(request, "tasks/edit_tasks.html", context)

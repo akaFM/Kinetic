@@ -324,9 +324,14 @@
         </div>
 
         <!-- Create Task Button -->
-        <form action="{% url 'create_task' %}" method="get">
-            <button class="create-task-btn" type="submit">Create Task</button>
-        </form>
+        <div style="display: flex; gap: 10px;">
+            <form action="{% url 'create_task' %}" method="get">
+                <button class="create-task-btn" type="submit">Create Task</button>
+            </form>
+            <form action="{% url 'edit_tasks' %}" method="get">
+                <button class="create-task-btn" type="submit">Edit Tasks</button>
+            </form>
+        </div>
 
         <!-- Calendar Section -->
         <div class="calendar-container">
