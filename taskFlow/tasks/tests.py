@@ -40,17 +40,18 @@ class FilterTasksByCategoryTests(TestCase):
         User = get_user_model()
         cls.user = User.objects.create_user(username='testuser', password='12345')
         
+        today = date.today()
         cls.task1 = Task.objects.create(
             name="Task 1",
             type=TaskType.WORK,
             user=cls.user,
-            due_date=date.today()
+            due_date=today
         )
         cls.task2 = Task.objects.create(
             name="Task 2", 
             type=TaskType.FUN,
             user=cls.user,
-            due_date=date.today()
+            due_date=today
         )
         
         cls.pattern1 = RecurringPattern.objects.create(
@@ -58,53 +59,57 @@ class FilterTasksByCategoryTests(TestCase):
             type=TaskType.WORK,
             user=cls.user,
             repetition_period=RecurringPattern.RepetitionPeriod.DAILY,
-            start_date=date.today(),
-            end_date=date.today()
+            start_date=today,
+            end_date=today
         )
         cls.pattern2 = RecurringPattern.objects.create(
             name="Fun Pattern",
             type=TaskType.FUN,
             user=cls.user,
             repetition_period=RecurringPattern.RepetitionPeriod.DAILY,
-            start_date=date.today(),
-            end_date=date.today()
+            start_date=today,
+            end_date=today
         )
         
         cls.recurring_task1 = Task.objects.create(
             name="Recurring Task 1",
             user=cls.user,
             recurring_pattern=cls.pattern1,
-            due_date=date.today()
+            due_date=today
         )
         cls.recurring_task2 = Task.objects.create(
             name="Recurring Task 2",
             user=cls.user,
             recurring_pattern=cls.pattern2,
-            due_date=date.today()
+            due_date=today
         )
 
     def test_filter_work_tasks(self):
+        today = date.today()
         tasks = Task.objects.all()
-        filtered = filter_tasks_by_category(tasks, TaskType.WORK)
+        filtered = filter_tasks_by_category(tasks, TaskType.WORK, today.year, today.month, today.day)
         self.assertEqual(filtered.count(), 2)
         self.assertIn(self.task1, filtered)
         self.assertIn(self.recurring_task1, filtered)
 
     def test_filter_fun_tasks(self):
+        today = date.today()
         tasks = Task.objects.all()
-        filtered = filter_tasks_by_category(tasks, TaskType.FUN) 
+        filtered = filter_tasks_by_category(tasks, TaskType.FUN, today.year, today.month, today.day)
         self.assertEqual(filtered.count(), 2)
         self.assertIn(self.task2, filtered)
         self.assertIn(self.recurring_task2, filtered)
 
     def test_filter_invalid_category(self):
+        today = date.today()
         tasks = Task.objects.all()
-        filtered = filter_tasks_by_category(tasks, "INVALID")
+        filtered = filter_tasks_by_category(tasks, "INVALID", today.year, today.month, today.day)
         self.assertEqual(filtered, tasks)
 
     def test_filter_none_category(self):
+        today = date.today()
         tasks = Task.objects.all()
-        filtered = filter_tasks_by_category(tasks, None)
+        filtered = filter_tasks_by_category(tasks, None, today.year, today.month, today.day)
         self.assertEqual(filtered, tasks)
 
 
