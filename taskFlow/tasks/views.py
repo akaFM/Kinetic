@@ -27,10 +27,10 @@ def get_today(request):
     return date.today()
 
 
-def filter_tasks_by_category(tasks, category):
+def filter_tasks_by_category(tasks, category, year, month, day):
     if category and category in TaskType.values:
         filtered_tasks = tasks.filter(type=category)
-        recurring_tasks = Task.objects.filter(recurring_pattern__in=RecurringPattern.objects.filter(type=category))
+        recurring_tasks = Task.objects.filter(recurring_pattern__in=RecurringPattern.objects.filter(type=category), due_date__year=year, due_date__month=month, due_date__day=day)
         return filtered_tasks | recurring_tasks
     return tasks
 
@@ -83,7 +83,7 @@ def get_next_date(current_date, repetition_period):
 def get_day_tasks_description_json(request, year, month, day):
     category = request.GET.get("category")
     tasks_queryset = Task.objects.filter(user=request.user, due_date__year=year, due_date__month=month, due_date__day=day)
-    tasks_queryset = filter_tasks_by_category(tasks_queryset, category)
+    tasks_queryset = filter_tasks_by_category(tasks_queryset, category, year, month, day)
 
     tasks = [{
         "id": t.id,
