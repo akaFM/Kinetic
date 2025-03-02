@@ -10,7 +10,7 @@ from datetime import date, timedelta
 from django.utils import timezone
 
 from .models import Task, TaskType, RecurringPattern, User
-from .views import get_today, filter_tasks_by_category, group_tasks_by_day, validate_password, create_recurring_tasks, get_next_date, get_day_tasks_description_json, index, login, logout, create_task
+from .views import get_today, filter_tasks_by_category, group_tasks_by_day, validate_password, create_recurring_tasks, get_next_date, get_day_tasks_description_json, index, login, logout, create_task, complete_task, uncomplete_task, edit_tasks
 from .forms import TaskForm
 
 class GetTodayTests(TestCase):
@@ -572,3 +572,177 @@ class CreateTaskTests(TestCase):
         
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.context['form'], TaskForm)
+
+
+class CompleteTaskTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        User = get_user_model()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.task = Task.objects.create(
+            name="Test Task",
+            user=self.user,
+            completed=False
+        )
+
+    def test_complete_task_successful(self):
+        request = self.factory.post('/complete_task',
+            data=json.dumps({'task_id': str(self.task.id)}),
+            content_type='application/json')
+        request.user = self.user
+        
+        response = complete_task(request)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        self.task.refresh_from_db()
+        self.assertTrue(self.task.completed)
+
+    def test_complete_task_not_found(self):
+        request = self.factory.post('/complete_task',
+            data=json.dumps({'task_id': 99999}),
+            content_type='application/json')
+        request.user = self.user
+        
+        response = complete_task(request)
+        
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(json.loads(response.content), 
+            {'status': 'error', 'message': 'Task not found'})
+
+    def test_complete_task_wrong_method(self):
+        request = self.factory.get('/complete_task')
+        request.user = self.user
+        
+        response = complete_task(request)
+        
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(json.loads(response.content),
+            {'status': 'error', 'message': 'Invalid method'})
+        
+
+class UncompleteTaskTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        User = get_user_model()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.task = Task.objects.create(
+            name="Test Task",
+            user=self.user,
+            completed=True  
+        )
+
+    def test_uncomplete_task_successful(self):
+        request = self.factory.post(
+            '/uncomplete_task',
+            data=json.dumps({'task_id': str(self.task.id)}),
+            content_type='application/json'
+        )
+        request.user = self.user
+        
+        response = uncomplete_task(request)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content), {'status': 'success'})
+        self.task.refresh_from_db()
+        self.assertFalse(self.task.completed)  
+
+    def test_uncomplete_task_not_found(self):
+        request = self.factory.post(
+            '/uncomplete_task',
+            data=json.dumps({'task_id': 99999}),
+            content_type='application/json'
+        )
+        request.user = self.user
+        
+        response = uncomplete_task(request)
+        
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            json.loads(response.content),
+            {'status': 'error', 'message': 'Task not found'}
+        )
+
+    def test_uncomplete_task_wrong_method(self):
+        request = self.factory.get('/uncomplete_task')
+        request.user = self.user
+        
+        response = uncomplete_task(request)
+        
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(
+            json.loads(response.content),
+            {'status': 'error', 'message': 'Invalid method'}
+        )
+
+
+class EditTasksTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        User = get_user_model()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        
+        self.one_time_task = Task.objects.create(
+            name="One-Time Task",
+            user=self.user,
+            due_date=timezone.now().date() + timedelta(days=1),
+            type=TaskType.GENERAL, 
+            urgency=5
+        )
+        
+        self.recurring_pattern = RecurringPattern.objects.create(
+            name="Recurring Pattern",
+            user=self.user,
+            type=TaskType.WORK,  
+            urgency=3,
+            repetition_period=RecurringPattern.RepetitionPeriod.WEEKLY,
+            start_date=timezone.now().date(),
+            end_date=timezone.now().date() + timedelta(days=30)
+        )
+        
+        self.recurring_task = Task.objects.create(
+            name="Recurring Task",
+            user=self.user,
+            recurring_pattern=self.recurring_pattern,
+            due_date=timezone.now().date() + timedelta(days=7),
+            urgency=3  
+        )
+
+    def test_edit_one_time_task_success(self):
+        data = {
+            'task_id': self.one_time_task.id,
+            'is_recurring': 'false',
+            'action': 'false',
+            'name': 'Updated Task',
+            'type': TaskType.SCHOOL.value,  
+            'urgency': '8',
+            'due_date': '2024-12-31'
+        }
+        request = self.factory.post(reverse('edit_tasks'), data)
+        request.user = self.user
+        
+        response = edit_tasks(request)
+        
+        self.assertEqual(response.status_code, 302)
+        self.one_time_task.refresh_from_db()
+        self.assertEqual(self.one_time_task.name, 'Updated Task')
+        self.assertEqual(self.one_time_task.type, TaskType.SCHOOL.value)
+
+    def test_edit_recurring_pattern_success(self):
+        data = {
+            'task_id': self.recurring_pattern.id,
+            'is_recurring': 'true',
+            'action': 'false',
+            'name': 'Updated Pattern',
+            'type': TaskType.CHORE.value,  
+            'urgency': '5'
+        }
+        request = self.factory.post(reverse('edit_tasks'), data)
+        request.user = self.user
+        
+        response = edit_tasks(request)
+        
+        self.assertEqual(response.status_code, 302)
+        self.recurring_pattern.refresh_from_db()
+        self.assertEqual(self.recurring_pattern.name, 'Updated Pattern')
+        self.assertEqual(self.recurring_pattern.type, TaskType.CHORE.value)
