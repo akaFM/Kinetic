@@ -15,4 +15,5 @@ urlpatterns = [
      path('tasks/uncomplete/', views.uncomplete_task, name='uncomplete_task'),
      path("edit-tasks", views.edit_tasks, name="edit_tasks"),
      path("music-playlist", views.music_playlist, name="music_playlist"),
+     path("days-with-tasks/<int:year>/<int:month>/", views.get_days_of_the_month_with_tasks, name="get_days_of_the_month_with_tasks"),
  ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

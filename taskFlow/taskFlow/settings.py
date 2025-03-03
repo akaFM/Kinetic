@@ -27,7 +27,7 @@ SECRET_KEY = getenv('SECRET_KEY')
 DEBUG = getenv('DEBUG')
 
 # no domain name yet
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 # pain
 AUTH_USER_MODEL = 'tasks.User'
