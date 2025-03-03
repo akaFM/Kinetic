@@ -1,7 +1,20 @@
+body{
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(135deg, #a68fe5 20%, #6545a3 60%, #4b0e9b 80%); /* Stronger gradient */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+}
+
 .container {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
+    font-family: 'Poppins', sans-serif;
 }
 
 .page-title {
@@ -79,7 +92,6 @@
     background-color: #bb2d3b;
     transform: translateY(-2px);
 }
-
 .empty-state {
     text-align: center;
     padding: 40px;
@@ -197,12 +209,14 @@
 
 .done-btn
 {
-    background-color: #bdbdbd;
+    background-color: #8B5ED7;
     color: white;
 }
 
 .done-btn:hover 
 {
-    background-color: #909090;
+    background-color: #7a5fb0;
     transform: translateY(-2px);
 }
+
+
