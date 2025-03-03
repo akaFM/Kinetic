@@ -1,26 +1,13 @@
-<<<<<<< HEAD
-/* tasks/static/tasks/dashboard.css */
-
-/* General Styles */
-:root {
-    --accent-color: #8B5ED7;
-}
-
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
+    background-color: #F4F2FC;
+    font-family: 'Poppins', sans-serif;
 }
-
-/* Dashboard Layout */
 .dashboard-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
 }
-
 /* Updated Sidebar Styling to look like a floating card */
 .sidebar {
     width: 280px;
@@ -43,7 +30,6 @@ body {
     margin-top: 30px;
     width: 100%;
 }
-
 /* Category Button Styles for sidebar on white background */
 .category-btn {
     display: block;
@@ -68,60 +54,10 @@ body {
     border: 2px solid #8B5ED7;
     color: white;
 }
-
-/* Content Section */
 .content {
     flex: 1;
     padding: 40px;
 }
-
-/* Sign-Out Section */
-.sign-out {
-    margin-top: auto;
-}
-
-.sign-out-btn {
-    background-color: #A66DD4;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    width: 100%;
-    border-radius: 6px;
-}
-
-.sign-out-btn:hover {
-    background-color: #d32f2f;
-}
-
-/* Welcome Message */
-.welcome-message-container {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.welcome-message-box {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    display: inline-block;
-    text-align: center;
-    max-width: 500px;
-    margin: auto;
-}
-
-.welcome-message-box h1 {
-    color: var(--accent-color);
-    margin-bottom: 10px;
-}
-
-.welcome-message-box p {
-    color: #666;
-    font-size: 16px;
-}
-
 /* Today's Task Section */
 .today-task {
     display: flex;
@@ -137,72 +73,75 @@ body {
     width: 150px;
     border-radius: 10px;
 }
-
-/* Task Buttons */
-.create-task-btn {
-    background-color: var(--accent-color);
-    color: white;
-    padding: 10px 15px;
+.btn-primary {
+    background-color: #8B5ED7;
     border: none;
+    padding: 10px 20px;
     border-radius: 8px;
-    cursor: pointer;
     font-weight: 600;
-    transition: background-color 0.3s, transform 0.2s;
 }
-
-.create-task-btn:hover {
+.btn-primary:hover {
     background-color: #A66DD4;
-    transform: translateY(-2px);
 }
-
-/* Mood Selector */
-.mood-selector {
-    text-align: center;
-    margin: 20px 0;
+/* Task Categories */
+.task-category {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
-
-.mood-btn {
-    font-size: 24px;
-    border: none;
-    padding: 10px;
-    margin: 5px;
-    cursor: pointer;
-    background: none;
-}
-
-.happy { color: #ffcc00; }  /* Yellow */
-.neutral { color: #666; }   /* Gray */
-.sad { color: #4A90E2; }    /* Blue */
-
-
-/* Grid Layout for Calendar & Categories */
-.task-view-container {
-    display: grid;
-    grid-template-columns: 2fr 1fr; /* Calendar takes 2 parts, categories take 1 part */
-    gap: 0; /* Ensures no space between calendar and categories */
-}
-
-/* Categories Section */
-.categories-container {
-    width: 100px; /* Fixed width for categories */
+.category-card {
+    width: 32%;
     background: white;
-    padding: 1rem;
+    padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-    padding-top: 0;
-    padding-bottom: 0;
-}
-
-.categories-container h2 {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    color: var(--accent-color);
+    position: relative;
 }
-
-.categories-container .sidebar-menu {
-    padding: 10px;
+.category-card h5 {
+    font-weight: 600;
 }
-
-/* Calendar Section */
+.category-card p {
+    font-weight: 400;
+}
+.divider {
+    border-bottom: 1px solid #E1D4FC;
+    margin: 15px 0;
+}
+.progress-bar-container {
+    margin-top: 15px;
+}
+.progress {
+    height: 8px;
+    border-radius: 5px;
+    background-color: #E1D4FC;
+    position: relative;
+}
+.progress-bar {
+    height: 100%;
+    border-radius: 5px;
+    background-color: #8B5ED7;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-top: 5px;
+}
+.days-left {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #8B5ED7;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+}
 .calendar-wrapper {
     display: flex;
     justify-content: space-between;
@@ -210,7 +149,6 @@ body {
     gap: 20px;
     width: 100%;
 }
-
 .calendar-container {
     flex: 1;
     position: relative;
@@ -219,7 +157,6 @@ body {
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 .calendar-header {
     display: flex;
     align-items: center;
@@ -227,7 +164,57 @@ body {
     margin-bottom: 20px;
     gap: 20px;
 }
-
+.calendar-header button {
+    background-color: #8B5ED7;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    min-width: 40px;
+}
+.calendar-header button:hover {
+    background-color: #A66DD4;
+}
+.calendar-header h5 {
+    margin: 0;
+    font-weight: 600;
+    flex-grow: 1;
+    text-align: center;
+}
+.calendar-table {
+    width: 100%;
+}
+.calendar-table th, .calendar-table td {
+    padding: 8px;
+    text-align: center;
+    border-radius: 5px;
+}
+.calendar-table th {
+    background-color: #8B5ED7;
+    color: white;
+}
+.calendar-table td:hover {
+    background-color: #E1D4FC;
+}
+.today {
+    background-color: #A66DD4;
+    color: white;
+    font-weight: bold;
+}
+/* Button Styling */
+.create-task-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #8B5ED7;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+}
+.create-task-btn:hover {
+    background-color: #A66DD4;
+}
 .calendar-title {
     display: flex;
     flex-direction: column;
@@ -235,405 +222,35 @@ body {
     gap: 8px;
     flex-grow: 1;
 }
-
-.calendar-table {
+#year-select {
+    width: auto;
+    min-width: 100px;
+    padding: 4px;
+    border: 1px solid #DEE2E6;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+}
+/* Updated Category Button Styles */
+.category-btn {
+    display: block;
     width: 100%;
-    border-collapse: collapse;
-}
-
-.calendar-table th, .calendar-table td {
-    padding: 8px;
-    text-align: center;
-    border-radius: 5px;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-    background: white;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background-color: #8B5ED7;
+    border: none;
     border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-}
-
-.calendar-day {
-    aspect-ratio: 1;
-    padding: 0.5rem;
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    position: relative;
-    background: white;
-    transition: all 0.2s ease;
-}
-
-.calendar-day.current-day {
-    border: 2px solid var(--accent-color);
-}
-
-.calendar-day.has-tasks {
-    cursor: pointer;
-    background-color: #f8f9fa;
-}
-
-.calendar-day.has-tasks:hover {
-    background-color: #e9ecef;
-}
-
-.day-number {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.task-indicator {
-    display: block; /* Removed flex properties */
-    margin-top: 1.2rem;
-}
-
-.task-item {
-    font-size: 0.8rem;
-    padding: 2px 4px;
-    background-color: var(--accent-color);
     color: white;
-    border-radius: 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
 }
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .task-view-container {
-        grid-template-columns: 1fr; /* Stacks the calendar and categories */
-        gap: 0; /* Keeps spacing between the sections */
-    }
-
-    .categories-container {
-        max-width: 100%; /* Makes categories full width on small screens */
-    }
-
-    .calendar-container {
-        max-width: 100%; /* Makes calendar full width on small screens */
-    }
-
-    .calendar-grid {
-        gap: 2px;
-        padding: 0.5rem;
-    }
-
-    .day-number {
-        font-size: 0.7rem;
-    }
-
-    .task-item {
-        font-size: 0.6rem;
-    }
-
-    .sidebar {
-        width: 100px;
-        padding: 15px;
-    }
-
-    .category-btn {
-        font-size: 14px;
-        padding: 8px 15px;
-    }
-
-    .sign-out-btn {
-        font-size: 14px;
-        padding: 8px 15px;
-    }
-
-    .welcome-message-box {
-        max-width: 90%;
-    }
+.category-btn:hover {
+    background-color: #A66DD4;
+    transform: translateY(-2px);
 }
-=======
-    body {
-        background-color: #F4F2FC;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .dashboard-container {
-        display: flex;
-    }
-
-    /* Updated Sidebar Styling to look like a floating card */
-    .sidebar {
-        width: 280px;
-        background-color: white;
-        color: #333;
-        padding: 20px;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        border-radius: 10px;
-        margin: 20px;
-    }
-
-    .sidebar h2 {
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-
-    .sidebar-menu {
-        margin-top: 30px;
-        width: 100%;
-    }
-
-    /* Category Button Styles for sidebar on white background */
-    .category-btn {
-        display: block;
-        width: 100%;
-        padding: 10px 20px;
-        margin-bottom: 10px;
-        background-color: #f0f0f0;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        color: #333;
-        font-weight: 600;
-        text-align: left;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-    }
-
-    .category-btn:hover {
-        background-color: #e0e0e0;
-        transform: translateY(-2px);
-    }
-
-    .category-btn.active {
-        background-color: #8B5ED7;
-        border: 2px solid #8B5ED7;
-        color: white;
-    }
-
-    .content {
-        flex: 1;
-        padding: 40px;
-    }
-
-    /* Today's Task Section */
-    .today-task {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-    }
-
-    .today-task img {
-        width: 150px;
-        border-radius: 10px;
-    }
-
-    .btn-primary {
-        background-color: #8B5ED7;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 600;
-    }
-
-    .btn-primary:hover {
-        background-color: #A66DD4;
-    }
-
-    /* Task Categories */
-    .task-category {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-
-    .category-card {
-        width: 32%;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        position: relative;
-    }
-
-    .category-card h5 {
-        font-weight: 600;
-    }
-
-    .category-card p {
-        font-weight: 400;
-    }
-
-    .divider {
-        border-bottom: 1px solid #E1D4FC;
-        margin: 15px 0;
-    }
-
-    .progress-bar-container {
-        margin-top: 15px;
-    }
-
-    .progress {
-        height: 8px;
-        border-radius: 5px;
-        background-color: #E1D4FC;
-        position: relative;
-    }
-
-    .progress-bar {
-        height: 100%;
-        border-radius: 5px;
-        background-color: #8B5ED7;
-        position: absolute;
-        left: 0;
-        top: 0;
-    }
-
-    .progress-text {
-        display: flex;
-        justify-content: space-between;
-        font-size: 14px;
-        margin-top: 5px;
-    }
-
-    .days-left {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        background-color: #8B5ED7;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    .calendar-container {
-        position: relative;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .calendar-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 20px;
-        gap: 20px;
-    }
-
-    .calendar-header button {
-        background-color: #8B5ED7;
-        color: white;
-        border: none;
-        padding: 5px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        min-width: 40px;
-    }
-
-    .calendar-header button:hover {
-        background-color: #A66DD4;
-    }
-
-    .calendar-header h5 {
-        margin: 0;
-        font-weight: 600;
-        flex-grow: 1;
-        text-align: center;
-    }
-
-    .calendar-table {
-        width: 100%;
-    }
-
-    .calendar-table th, .calendar-table td {
-        padding: 8px;
-        text-align: center;
-        border-radius: 5px;
-    }
-
-    .calendar-table th {
-        background-color: #8B5ED7;
-        color: white;
-    }
-
-    .calendar-table td:hover {
-        background-color: #E1D4FC;
-    }
-
-    .today {
-        background-color: #A66DD4;
-        color: white;
-        font-weight: bold;
-    }
-
-    /* Button Styling */
-    .create-task-btn {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: #8B5ED7;
-        border: none;
-        border-radius: 8px;
-        color: white;
-        font-weight: 600;
-    }
-
-    .create-task-btn:hover {
-        background-color: #A66DD4;
-    }
-
-    .calendar-title {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        flex-grow: 1;
-    }
-
-    #year-select {
-        width: auto;
-        min-width: 100px;
-        padding: 4px;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        font-size: 14px;
-        background-color: white;
-    }
-
-    /* Updated Category Button Styles */
-    .category-btn {
-        display: block;
-        width: 100%;
-        padding: 10px 20px;
-        margin-bottom: 10px;
-        background-color: #8B5ED7;
-        border: none;
-        border-radius: 8px;
-        color: white;
-        font-weight: 600;
-        text-align: left;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-    }
-
-    .category-btn:hover {
-        background-color: #A66DD4;
-        transform: translateY(-2px);
-    }
-
-    .category-btn.active {
-        background-color: #A66DD4;
-        border: 2px solid #fff;
-    }
->>>>>>> refs/remotes/origin/main
+.category-btn.active {
+    background-color: #A66DD4;
+    border: 2px solid #fff;
+}
