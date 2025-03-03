@@ -295,34 +295,33 @@
 {% endblock %}
 
 {% block body %}
+
 <div class="dashboard-container">
     <!-- Sidebar -->
     <div class="sidebar">
-        <h2>Categories</h2>
-        <div class="sidebar-menu">
-            <form id="categoryForm">
-                {% csrf_token %}
-                <button type="button" class="category-btn {% if not category or category == 'All' %}active{% endif %}" data-category="">
-                    All Tasks
-                </button>
-                {% for value, label in TaskType.choices %}
-                <button type="button" class="category-btn {% if category == value %}active{% endif %}" data-category="{{ value }}">
-                    {{ label }}
-                </button>
-                {% endfor %}
-            </form>
-        </div>
-        <!-- Sign Out Button -->
-        <div style="margin-top: auto; width: 100%;">
+        <h2>Dashboard</h2>
+        <!--<div class="sidebar-menu">-->
             <form action="{% url 'logout' %}" method="get">
-            <button type="submit" class="category-btn" style="background-color: #A66DD4; margin-bottom: 0;">
-                Sign Out
-            </button>
+                <button type="submit" class="category-btn" style="background-color: #A66DD4; margin-bottom: 0;">
+                    Sign Out
+                </button>
             </form>
-        </div>
+            <div style="text-align: center; margin-top: 20px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                <h4 style="font-weight: 600;">Quote For You!</h4>
+                <p id="quote-text" style="font-style: italic; color: #666;">{{ quote }}</p>
+            </div>
+       <!--</div>-->
     </div>
+    
     <!-- Main Content -->
     <div class="content">
+        <div class="welcome-message-container" style="margin-bottom: 20px;">
+            <div class="welcome-message-box">
+                <h1>Welcome to TaskFlow</h1>
+                <p>Where you can effectively manage your life</p>
+            </div>
+        </div>
+        
         <!-- Today's Task Section -->
         <div class="today-task">
             <div>
@@ -330,7 +329,7 @@
             </div>
         </div>
 
-        <!-- Create Task Button -->
+        <!-- Create Task Buttons -->
         <div style="display: flex; gap: 10px;">
             <form action="{% url 'create_task' %}" method="get">
                 <button class="create-task-btn" type="submit">Create Task</button>
@@ -338,29 +337,49 @@
             <form action="{% url 'edit_tasks' %}" method="get">
                 <button class="create-task-btn" type="submit">Edit Tasks</button>
             </form>
-        </div>
+           </div>
 
-        <!-- Calendar Section -->
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <button id="prev-month" class="btn btn-secondary">&lt;</button>
-                <div class="calendar-title">
-                    <h5 id="calendar-month"></h5>
-                    <select id="year-select" class="form-select"></select>
+
+        <!-- Flexbox Container for Calendar & Categories -->
+        <div class="calendar-wrapper">
+            <!-- Calendar Section -->
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prev-month" class="btn btn-secondary">&lt;</button>
+                    <div class="calendar-title">
+                        <h5 id="calendar-month"></h5>
+                        <select id="year-select" class="form-select"></select>
+                    </div>
+                    <button id="next-month" class="btn btn-secondary">&gt;</button>
                 </div>
-                <button id="next-month" class="btn btn-secondary">&gt;</button>
+                <table class="calendar-table">
+                    <thead>
+                        <tr>
+                            <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calendar-body"></tbody>
+                </table>
+                
+                {% include 'tasks/dayViewPopUp.html' %} <!-- Calendar Day View Pop Up Section-->
             </div>
-            <table class="calendar-table">
-                <thead>
-                    <tr>
-                        <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
-                    </tr>
-                </thead>
-                <tbody id="calendar-body"></tbody>
-            </table>
-
-            {% include 'tasks/dayViewPopUp.html' %} <!-- Calendar Day View Pop Up Section-->
-
+            <!-- Categories Section (Now beside Calendar) -->
+            <div class="categories-container" style="flex-basis: 250px;">
+                <h2>Categories</h2>
+                <div class="sidebar-menu">
+                    <form id="categoryForm">
+                        {% csrf_token %}
+                        <button type="button" class="category-btn {% if not category or category == 'All' %}active{% endif %}" data-category="">
+                            All Tasks
+                        </button>
+                        {% for value, label in TaskType.choices %}
+                        <button type="button" class="category-btn {% if category == value %}active{% endif %}" data-category="{{ value }}">
+                            {{ label }}
+                        </button>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

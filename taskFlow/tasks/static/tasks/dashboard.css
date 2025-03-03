@@ -1,4 +1,251 @@
 /* tasks/static/tasks/dashboard.css */
+
+/* General Styles */
+:root {
+    --accent-color: #8B5ED7;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+/* Updated Sidebar Styling to look like a floating card */
+.sidebar {
+    width: 280px;
+    background-color: white;
+    color: #333;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    margin: 20px;
+}
+.sidebar h2 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.sidebar-menu {
+    margin-top: 30px;
+    width: 100%;
+}
+
+/* Category Button Styles for sidebar on white background */
+.category-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background-color: #F0F0F0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color: #333;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.category-btn:hover {
+    background-color: #E0E0E0;
+    transform: translateY(-2px);
+}
+.category-btn.active {
+    background-color: #8B5ED7;
+    border: 2px solid #8B5ED7;
+    color: white;
+}
+
+/* Content Section */
+.content {
+    flex: 1;
+    padding: 40px;
+}
+
+/* Sign-Out Section */
+.sign-out {
+    margin-top: auto;
+}
+
+.sign-out-btn {
+    background-color: #A66DD4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 6px;
+}
+
+.sign-out-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* Welcome Message */
+.welcome-message-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.welcome-message-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    text-align: center;
+    max-width: 500px;
+    margin: auto;
+}
+
+.welcome-message-box h1 {
+    color: var(--accent-color);
+    margin-bottom: 10px;
+}
+
+.welcome-message-box p {
+    color: #666;
+    font-size: 16px;
+}
+
+/* Today's Task Section */
+.today-task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+.today-task img {
+    width: 150px;
+    border-radius: 10px;
+}
+
+/* Task Buttons */
+.create-task-btn {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.create-task-btn:hover {
+    background-color: #A66DD4;
+    transform: translateY(-2px);
+}
+
+/* Mood Selector */
+.mood-selector {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.mood-btn {
+    font-size: 24px;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    background: none;
+}
+
+.happy { color: #ffcc00; }  /* Yellow */
+.neutral { color: #666; }   /* Gray */
+.sad { color: #4A90E2; }    /* Blue */
+
+
+/* Grid Layout for Calendar & Categories */
+.task-view-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Calendar takes 2 parts, categories take 1 part */
+    gap: 0; /* Ensures no space between calendar and categories */
+}
+
+/* Categories Section */
+.categories-container {
+    width: 100px; /* Fixed width for categories */
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.categories-container h2 {
+    text-align: center;
+    color: var(--accent-color);
+}
+
+.categories-container .sidebar-menu {
+    padding: 10px;
+}
+
+/* Calendar Section */
+.calendar-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+}
+
+.calendar-container {
+    flex: 1;
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.calendar-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.calendar-table th, .calendar-table td {
+    padding: 8px;
+    text-align: center;
+    border-radius: 5px;
+}
+
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -41,9 +288,7 @@
 }
 
 .task-indicator {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+    display: block; /* Removed flex properties */
     margin-top: 1.2rem;
 }
 
@@ -58,57 +303,50 @@
     text-overflow: ellipsis;
 }
 
-/* Updated Category Button Styles */
-.category-btn {
-    display: block;
-    width: 100%;
-    padding: 10px 20px;
-    margin-bottom: 10px;
-    background-color: #8B5ED7;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.category-btn:hover {
-    background-color: #A66DD4;
-    transform: translateY(-2px);
-}
-
-.category-btn.active {
-    background-color: #A66DD4;
-    border: 2px solid #fff;
-}
-
-.sign-out-btn {
-    background-color: #A66DD4; /* Red color */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.sign-out-btn:hover {
-    background-color: #d32f2f;
-}
-
-
+/* Responsive Design */
 @media (max-width: 768px) {
+    .task-view-container {
+        grid-template-columns: 1fr; /* Stacks the calendar and categories */
+        gap: 0; /* Keeps spacing between the sections */
+    }
+
+    .categories-container {
+        max-width: 100%; /* Makes categories full width on small screens */
+    }
+
+    .calendar-container {
+        max-width: 100%; /* Makes calendar full width on small screens */
+    }
+
     .calendar-grid {
         gap: 2px;
         padding: 0.5rem;
     }
-    
+
     .day-number {
         font-size: 0.7rem;
     }
-    
+
     .task-item {
         font-size: 0.6rem;
+    }
+
+    .sidebar {
+        width: 100px;
+        padding: 15px;
+    }
+
+    .category-btn {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    .sign-out-btn {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    .welcome-message-box {
+        max-width: 90%;
     }
 }
