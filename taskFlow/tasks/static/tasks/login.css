@@ -13,26 +13,6 @@ body {
     overflow: hidden;
 }
 
-/* Animated Clock Design */
-body::before {
-    content: "";
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    background: url('{% static "tasks/images/clock.jpeg" %}') no-repeat center;
-    background-size: contain;
-    opacity: 0.6; /* Increased opacity for better visibility */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation: floatClock 6s infinite ease-in-out alternate;
-    z-index: 0; /* Ensure it's not hidden behind content */
-}
-
-@keyframes floatClock {
-    from { transform: translateY(0px); }
-    to { transform: translateY(20px); }
-}
 
 /* Container */
 .login-container {
@@ -50,8 +30,8 @@ body::before {
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    width: 800px;
-    max-width: 90%;
+    width: 50%;
+    max-width: 800px;
     backdrop-filter: blur(8px);
 }
 
@@ -77,6 +57,24 @@ body::before {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-right: 20px;
+}
+
+/* Image container */
+.login-image {
+    flex-shrink: 0; /* Prevents it from shrinking */
+    width: 200px; /* Adjust this value to resize the image */
+    height: 200px; /* Ensure it doesn’t stretch */
+    overflow: hidden; /* Prevents image overflow */
+    margin-top: 100px;
+    margin-left: 50px;
+}
+
+/* Image styling */
+.login-image img {
+    width: 100%; /* Makes the image fit within its container */
+    height: auto; /* Maintains aspect ratio */
+    border-radius: 10px; /* Optional rounded corners */
 }
 
 h2 {
@@ -85,6 +83,110 @@ h2 {
     color: #5d3ebc;
     margin-bottom: 8px;
 }
+
+/* Container for Overlapping Circles */
+.abstract-circles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1; 
+}
+
+/* Circle styling */
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.8; 
+    mix-blend-mode: overlay;
+}
+
+.circle1 {
+    background-color: rgba(153, 77, 77, 0.3);
+    width: 60px;
+    height: 60px;
+    top: 16%;
+    left: 52%;
+}
+
+/* Example of Medium Circle */
+.circle2 {
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 250px;
+    height: 250px;
+    top: -10%;
+    left: 60%;
+}
+
+/* Example of Small Circle */
+.circle3 {
+    background-color: rgba(187, 142, 219, 0.4);
+    width: 150px;
+    height: 150px;
+    top: 70%;
+    left: 20%;
+}
+
+/* Larger Circle */
+.circle4 {
+    background-color: rgba(255, 255, 255, 0.6);
+    width: 350px;
+    height: 350px;
+    top: 30%;
+    left: 78%;
+}
+
+/* Another Smaller Circle */
+.circle5 {
+    background-color: rgba(156, 28, 28, 0.3);
+    width: 260px;
+    height: 260px;
+    top: 3%;
+    left: 86%;
+}
+
+/* Another Medium Circle */
+.circle6 {
+    background-color: rgba(185, 144, 214, 0.7);
+    width: 280px;
+    height: 280px;
+    top: 85%;
+    left: 40%;
+}
+
+.circle7 {
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 110px;
+    height: 110px;
+    top: 6%;
+    left: 57%;
+}
+
+.circle8 {
+    background-color: rgba(97, 42, 134, 0.452);
+    width: 350px;
+    height: 350px;
+    top: 75%;
+    left: 8%;
+}
+
+.circle9 {
+    background-color: rgba(156, 28, 28, 0.3);
+    width: 60px;
+    height: 60px;
+    top: 82%;
+    left: 58%;
+}
+
+.circle10 {
+    background-color: rgba(255, 255, 255, 0.6);
+    width: 350px;
+    height: 350px;
+    top: 45%;
+    left: 3%;
+}
+
 
 p {
     font-size: 15px;
@@ -123,7 +225,7 @@ p {
 
 /* Error Messages */
 .error-message {
-    color: #d9534f;
+    color: #8f6bc1;
     font-size: 12px;
     margin-top: 4px;
 }
@@ -169,17 +271,17 @@ p {
 
 .incorrect-password-msg
 {
-    font-size: 16px;
-    text-align: right;
+    font-size: 14px;
+    text-align: middle;
     margin-bottom: 12px;
-    color: red;
+    color: #8f6bc1;
 }
 
 .login-password-msg
 {
     display: none;
     font-size: 16px;
-    text-align: right;
+    text-align: middle;
     margin-bottom: 12px;
-    color: red;
+    color: #8f6bc1;
 }
