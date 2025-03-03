@@ -61,3 +61,10 @@ class Task(models.Model):
     @property
     def get_urgency(self):
         return self.recurring_pattern.urgency if self.recurring_pattern else self.urgency
+
+class Note(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="note")  # Each user has one note
+    content = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"Note for {self.user.username}"

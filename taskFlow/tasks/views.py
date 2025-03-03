@@ -16,7 +16,9 @@ import json
 import random
 from django.shortcuts import render
 
-
+from django.shortcuts import render, redirect
+from .models import Note
+from .forms import NoteForm
 
 from .models import *
 from .forms import *
@@ -105,24 +107,9 @@ def get_day_tasks_description_json(request, year, month, day):
 
 
 @login_required()
-# def index(request):
-#     today = get_today(request)
-    
-#     context = {
-#         "category": "All Tasks",
-#         "month": today.month,
-#         "year": today.year,
-#         "currDay": date.today().day if (today.year, today.month) == (date.today().year, date.today().month) else -1,
-#         "calendarForm": calendarChoice(),
-#         "categoryForm": categoryChoice(),
-#         "TaskType": TaskType,
-#     }
-#     return render(request, "tasks/dashboard.html", context)
-
-
 def index(request):
     today = get_today(request)
-    
+
     # Add the quote logic here
     quotes = [
         "Believe you can and you're halfway there.",
@@ -136,6 +123,16 @@ def index(request):
 
     random_quote = random.choice(quotes)
 
+    # Handle Notes
+    note, created = Note.objects.get_or_create(user=request.user)  # Get or create user's note
+    if request.method == "POST":
+        form = NoteForm(request.POST, instance=note)
+        if form.is_valid():
+            form.save()
+            return redirect("index")  # Refresh the page after saving
+    else:
+        form = NoteForm(instance=note)
+
     context = {
         "category": "All Tasks",
         "month": today.month,
@@ -145,6 +142,7 @@ def index(request):
         "categoryForm": categoryChoice(),
         "TaskType": TaskType,
         "quote": random_quote,  # Pass the random quote to the template
+        "note_form": form  # Pass the note form to the template
     }
 
     return render(request, "tasks/dashboard.html", context)
@@ -159,6 +157,7 @@ def music_playlist(request):
         print(playlist)
     ]
     return render(request, 'tasks/dashboard.html', {'playlist': playlist})
+
 
 
 def login(request):

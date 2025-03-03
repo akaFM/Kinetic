@@ -63,8 +63,21 @@
                 </li>
             </ul>            
         </div>
+        <!-- Notes Section -->
+        <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+            <h4 style="font-weight: 600; margin-bottom: 10px;">Your Notes</h4>
+            <form method="post">
+                {% csrf_token %}
+                <textarea name="content" rows="5" placeholder="Write your notes here..." style="width: 100%; padding: 10px; border: 1px solid #ccc;border-radius: 5px; resize: none;">{{ note_form.instance.content }}</textarea>
+                    <button type="submit" class="category-btn" style="background-color: #8B5ED7; margin-top: 10px;">
+                        Save Note
+                    </button>
+            </form>
+        </div>
     </div>
     
+            
+
     <!-- Main Content -->
     <div class="content">
         <div class="welcome-message-container" style="margin-bottom: 20px;">
