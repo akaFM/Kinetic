@@ -1,4 +1,5 @@
 import django
+import random
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -264,3 +265,20 @@ def edit_tasks(request):
         "TaskType": TaskType,
     }
     return render(request, "tasks/edit_tasks.html", context)
+
+def quote(request):
+    quotes = [
+        "Believe you can and you're halfway there.",
+        "Your limitation—it's only your imagination.",
+        "Push yourself, because no one else is going to do it for you.",
+        "Sometimes later becomes never. Do it now.",
+        "Dream it. Wish it. Do it.",
+        "Great things never come from comfort zones.",
+        "Don't stop when you're tired. Stop when you're done."
+    ]
+    random_quote = random.choice(quotes)
+    context = {
+        'quote': random_quote
+    }
+    return render(request, 'tasks/dashboard.html', context)
+
