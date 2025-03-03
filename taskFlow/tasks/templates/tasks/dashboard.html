@@ -11,7 +11,6 @@
 {% endblock %}
 
 {% block body %}
-
 <div class="dashboard-container">
     <!-- Sidebar -->
     <div class="sidebar">
@@ -19,7 +18,7 @@
         <!-- Sign Out Button -->
         <div style="margin-top: 10px; width: 100%;">
             <form action="{% url 'logout' %}" method="get">
-                <button type="submit" class="category-btn" style="background-color: #A66DD4; margin-bottom: 0;">
+                <button type="submit" class="category-btn" style="background-color: #8B5ED7; margin-bottom: 0;">
                     Sign Out
                 </button>
             </form>
@@ -54,13 +53,6 @@
                         Your browser does not support the audio element.
                     </audio>
                 </li>
-                <li class="song">
-                    <p><strong>Vibin</strong> by Purrple Cat</p>
-                    <audio controls>
-                        <source src="/static/audio/Vibin.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </li>
             </ul>            
         </div>
         <!-- Notes Section -->
@@ -75,8 +67,6 @@
             </form>
         </div>
     </div>
-    
-            
 
     <!-- Main Content -->
     <div class="content">

@@ -25,7 +25,6 @@ body {
 /* Task Box */
 .task-create-box {
     display: flex;
-    background: rgba(255, 255, 255, 0.9);
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -134,7 +133,8 @@ input, select, button {
 
 .task-create-form p {
     font-size: 16px;
-    color: #5d3ebc;
+    color: #382377;
+    text-align: center;
 }
 
 /* Container for Overlapping Circles */
@@ -204,7 +204,7 @@ input, select, button {
     background-color: rgba(185, 144, 214, 0.7);
     width: 280px;
     height: 280px;
-    top: 85%;
+    top: 70%;
     left: 40%;
 }
 
@@ -220,7 +220,7 @@ input, select, button {
     background-color: rgba(97, 42, 134, 0.452);
     width: 350px;
     height: 350px;
-    top: 75%;
+    top: 68%;
     left: 8%;
 }
 
@@ -228,7 +228,7 @@ input, select, button {
     background-color: rgba(156, 28, 28, 0.3);
     width: 60px;
     height: 60px;
-    top: 82%;
+    top: 72%;
     left: 58%;
 }
 
