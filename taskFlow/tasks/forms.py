@@ -89,3 +89,17 @@ class calendarChoice(forms.Form):
 
 class categoryChoice(forms.Form):
     category = forms.ChoiceField(choices=[('', 'All Tasks')] + list(TaskType.choices), widget=forms.Select(attrs={'class': 'form-select'}), required=False)
+
+class NoteForm(forms.ModelForm):
+    class Meta:
+        model = Note
+        fields = ["content"]
+        widgets = {
+            "content": forms.Textarea(attrs={
+                "rows": 5, 
+                "cols": 30, 
+                "placeholder": "Jot down your thoughts...",
+                "class": "form-control note-input"
+            })
+        }
+    labels = {"content": ""}
