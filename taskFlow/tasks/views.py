@@ -149,6 +149,17 @@ def index(request):
 
     return render(request, "tasks/dashboard.html", context)
 
+def music_playlist(request):
+    playlist = [
+        {'title': 'DoubleRainbow', 'artist': 'Artist 1', 'audio_url': '/static/audio/DoubleRainbow.mp3'},
+        {'title': 'HopeEmotional', 'artist': 'Artist 2', 'audio_url': '/static/audio/HopeEmotional.mp3'},
+        {'title': 'LateAtNight', 'artist': 'Artist 3', 'audio_url': '/static/audio/LateAtNight.mp3'},
+        {'title': 'Vibin', 'artist': 'Artist 4', 'audio_url': '/static/audio/Vibin.mp3'},
+
+        print(playlist)
+    ]
+    return render(request, 'tasks/dashboard.html', {'playlist': playlist})
+
 
 def login(request):
     if request.method == "POST":
