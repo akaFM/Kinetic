@@ -11,5 +11,4 @@ urlpatterns = [
      path('tasks/complete/', views.complete_task, name='complete_task'),
      path('tasks/uncomplete/', views.uncomplete_task, name='uncomplete_task'),
      path("edit-tasks", views.edit_tasks, name="edit_tasks"),
-     path('random-quote/', views.index, name='random_quote'),
  ]

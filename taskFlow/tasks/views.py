@@ -12,6 +12,10 @@ from django.http import JsonResponse
 import json
 
 
+import random
+from django.shortcuts import render
+
+
 
 from .models import *
 from .forms import *
@@ -100,9 +104,37 @@ def get_day_tasks_description_json(request, year, month, day):
 
 
 @login_required()
+# def index(request):
+#     today = get_today(request)
+    
+#     context = {
+#         "category": "All Tasks",
+#         "month": today.month,
+#         "year": today.year,
+#         "currDay": date.today().day if (today.year, today.month) == (date.today().year, date.today().month) else -1,
+#         "calendarForm": calendarChoice(),
+#         "categoryForm": categoryChoice(),
+#         "TaskType": TaskType,
+#     }
+#     return render(request, "tasks/dashboard.html", context)
+
+
 def index(request):
     today = get_today(request)
     
+    # Add the quote logic here
+    quotes = [
+        "Believe you can and you're halfway there.",
+        "Your limitation—it's only your imagination.",
+        "Push yourself, because no one else is going to do it for you.",
+        "Sometimes later becomes never. Do it now.",
+        "Dream it. Wish it. Do it.",
+        "Great things never come from comfort zones.",
+        "Don't stop when you're tired. Stop when you're done."
+    ]
+
+    random_quote = random.choice(quotes)
+
     context = {
         "category": "All Tasks",
         "month": today.month,
@@ -111,7 +143,9 @@ def index(request):
         "calendarForm": calendarChoice(),
         "categoryForm": categoryChoice(),
         "TaskType": TaskType,
+        "quote": random_quote,  # Pass the random quote to the template
     }
+
     return render(request, "tasks/dashboard.html", context)
 
 
@@ -266,65 +300,4 @@ def edit_tasks(request):
         "TaskType": TaskType,
     }
     return render(request, "tasks/edit_tasks.html", context)
-
-'''
-import random
-from django.shortcuts import render
-
-def index(request):
-    quotes = [
-        "Believe you can and you're halfway there.",
-        "Your limitation—it's only your imagination.",
-        "Push yourself, because no one else is going to do it for you.",
-        "Sometimes later becomes never. Do it now.",
-        "Dream it. Wish it. Do it.",
-        "Great things never come from comfort zones.",
-        "Don't stop when you're tired. Stop when you're done."
-    ]
-
-    random_quote = random.choice(quotes)
-
-    context = {
-        'quote': random_quote
-    }
-
-    return render(request, 'tasks/dashboard.html', context)
-'''
-
-import random
-from django.shortcuts import render
-
-def index(request):
-    quotes = [
-        "Believe you can and you're halfway there.",
-        "Your limitation—it's only your imagination.",
-        "Push yourself, because no one else is going to do it for you.",
-        "Sometimes later becomes never. Do it now.",
-        "Dream it. Wish it. Do it.",
-        "Great things never come from comfort zones.",
-        "Don't stop when you're tired. Stop when you're done."
-    ]
-
-    random_quote = random.choice(quotes)
-
-    # Default mood
-    mood = request.POST.get('mood', 'neutral')
-
-    # Define mood colors
-    mood_colors = {
-        'happy': '#ffeb99',  # Light Yellow
-        'neutral': '#f4f4f9',  # Soft Gray
-        'sad': '#cce0ff'  # Light Blue
-    }
-
-    background_color = mood_colors.get(mood, '#f4f4f9')  # Default to neutral
-
-    context = {
-        'quote': random_quote,
-        'mood': mood,
-        'background_color': background_color
-    }
-
-    return render(request, 'tasks/dashboard.html', context)
-
 
