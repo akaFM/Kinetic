@@ -10,6 +10,8 @@ from django.contrib.auth.hashers import check_password
 from datetime import date, datetime, timedelta
 from calendar import monthrange
 from django.http import JsonResponse
+from django.db.models.functions import ExtractDay
+
 import json
 
 
@@ -104,6 +106,24 @@ def get_day_tasks_description_json(request, year, month, day):
     } for t in tasks_queryset]
     
     return JsonResponse({"tasks": tasks})
+
+
+@login_required()
+def get_days_of_the_month_with_tasks(request, year, month):
+    num_of_days = monthrange(year, month)[1]
+    
+    days_with_tasks = (
+        Task.objects.filter(user=request.user, due_date__year=year, due_date__month=month)
+        .annotate(day=ExtractDay("due_date"))  
+        .values_list("day", flat=True)  
+        .distinct()  
+    )
+
+    task_days = [0] * num_of_days
+    for day in days_with_tasks:
+        task_days[day - 1] = 1 
+
+    return JsonResponse({"task_days": task_days})
 
 
 @login_required()

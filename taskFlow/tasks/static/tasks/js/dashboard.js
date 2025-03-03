@@ -1,4 +1,4 @@
-    function generateCalendar(targetDate = new Date()) {
+    async function generateCalendar(targetDate = new Date()) {
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const firstDay = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1).getDay();
         const daysInMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).getDate();
@@ -9,6 +9,8 @@
         let calendarBody = "";
         let date = 1;
 
+        let days_with_tasks = await get_days_with_tasks(targetDate.getFullYear(), targetDate.getMonth()+1);
+
         for (let i = 0; i < 6; i++) {
             let row = "<tr>";
             for (let j = 1; j <= 7; j++) {
@@ -18,7 +20,7 @@
                     const isToday = date === new Date().getDate() && 
                                 targetDate.getMonth() === new Date().getMonth() && 
                                 targetDate.getFullYear() === new Date().getFullYear();
-                    row += `<td class="${isToday ? 'today' : ''}">${date}</td>`;
+                    row += `<td class="${isToday ? 'today' : ''}">${date} ${days_with_tasks[date - 1] === 1 ? '<span class="task-indicator-icon">&#8226;</span>' : ''}</td>`;
                     date++;
                 }
             }
@@ -29,6 +31,28 @@
         document.getElementById("calendar-body").innerHTML = calendarBody;
 
     }
+
+
+    async function get_days_with_tasks(year, month) 
+    {
+        try 
+        {
+            const response = await fetch(`/days-with-tasks/${year}/${month}/`);
+            const data     = await response.json();
+
+            if (data.task_days.length > 0) 
+                return data.task_days; 
+            else
+                return []; 
+        } 
+        catch (error) 
+        {
+            console.error("Error fetching tasks.", error);
+            return []; 
+        }
+    }
+
+
 
     let currentDate = new Date();
 

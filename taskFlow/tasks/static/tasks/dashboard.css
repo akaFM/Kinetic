@@ -397,3 +397,16 @@ audio {
     left: 3%;
 }
 
+td
+{
+    position: relative;
+}
+
+.task-indicator-icon
+{
+    position: absolute;
+    bottom: -4px;
+    left: 46%;
+    color: #cdcdcd;
+}
+
