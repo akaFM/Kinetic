@@ -36,7 +36,7 @@ body {
     width: 100%;
     padding: 10px 20px;
     margin-bottom: 10px;
-    background-color: #F0F0F0;
+    background-color: #f0f0f0;
     border: 1px solid #ddd;
     border-radius: 8px;
     color: #333;
@@ -45,10 +45,12 @@ body {
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
 }
+
 .category-btn:hover {
-    background-color: #E0E0E0;
+    background-color: #e0e0e0;
     transform: translateY(-2px);
 }
+
 .category-btn.active {
     background-color: #8B5ED7;
     border: 2px solid #8B5ED7;
@@ -80,9 +82,11 @@ body {
     border-radius: 8px;
     font-weight: 600;
 }
+
 .btn-primary:hover {
     background-color: #A66DD4;
 }
+
 /* Task Categories */
 .task-category {
     display: flex;
@@ -98,19 +102,24 @@ body {
     text-align: center;
     position: relative;
 }
+
 .category-card h5 {
     font-weight: 600;
 }
+
 .category-card p {
     font-weight: 400;
 }
+
 .divider {
     border-bottom: 1px solid #E1D4FC;
     margin: 15px 0;
 }
+
 .progress-bar-container {
     margin-top: 15px;
 }
+
 .progress {
     height: 8px;
     border-radius: 5px;
@@ -157,6 +166,8 @@ body {
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+
 .calendar-header {
     display: flex;
     align-items: center;
@@ -173,18 +184,22 @@ body {
     cursor: pointer;
     min-width: 40px;
 }
+
 .calendar-header button:hover {
     background-color: #A66DD4;
 }
+
 .calendar-header h5 {
     margin: 0;
     font-weight: 600;
     flex-grow: 1;
     text-align: center;
 }
+
 .calendar-table {
     width: 100%;
 }
+
 .calendar-table th, .calendar-table td {
     padding: 8px;
     text-align: center;
@@ -194,9 +209,11 @@ body {
     background-color: #8B5ED7;
     color: white;
 }
+
 .calendar-table td:hover {
     background-color: #E1D4FC;
 }
+
 .today {
     background-color: #A66DD4;
     color: white;
@@ -212,9 +229,11 @@ body {
     color: white;
     font-weight: 600;
 }
+
 .create-task-btn:hover {
     background-color: #A66DD4;
 }
+
 .calendar-title {
     display: flex;
     flex-direction: column;
@@ -226,7 +245,7 @@ body {
     width: auto;
     min-width: 100px;
     padding: 4px;
-    border: 1px solid #DEE2E6;
+    border: 1px solid #dee2e6;
     border-radius: 4px;
     font-size: 14px;
     background-color: white;

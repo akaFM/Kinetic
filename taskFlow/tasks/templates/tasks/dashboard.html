@@ -16,17 +16,19 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <h2>Dashboard</h2>
-        <!--<div class="sidebar-menu">-->
+        <!-- Sign Out Button -->
+        <div style="margin-top: 10px; width: 100%;">
             <form action="{% url 'logout' %}" method="get">
                 <button type="submit" class="category-btn" style="background-color: #A66DD4; margin-bottom: 0;">
                     Sign Out
                 </button>
             </form>
-            <div style="text-align: center; margin-top: 20px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                <h4 style="font-weight: 600;">Quote For You!</h4>
-                <p id="quote-text" style="font-style: italic; color: #666;">{{ quote }}</p>
-            </div>
-       <!--</div>-->
+        </div>
+        <!-- Quote Box -->
+        <div style="text-align: center; margin-top: 15px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+            <h4 style="font-weight: 600;">Quote For You!</h4>
+            <p id="quote-text" style="font-style: italic; color: #666;">{{ quote }}</p>
+        </div>
     </div>
     
     <!-- Main Content -->
@@ -37,7 +39,6 @@
                 <p>Where you can effectively manage your life</p>
             </div>
         </div>
-        
         <!-- Today's Task Section -->
         <div class="today-task">
             <div>
@@ -55,8 +56,6 @@
             </form>
            </div>
 
-
-        <!-- Flexbox Container for Calendar & Categories -->
         <div class="calendar-wrapper">
             <!-- Calendar Section -->
             <div class="calendar-container">
@@ -76,12 +75,11 @@
                     </thead>
                     <tbody id="calendar-body"></tbody>
                 </table>
-                
+
                 {% include 'tasks/dayViewPopUp.html' %} <!-- Calendar Day View Pop Up Section-->
+
             </div>
-            <!-- Categories Section (Now beside Calendar) -->
-            <div class="categories-container" style="flex-basis: 250px;">
-                <h2>Categories</h2>
+            <div class="category-filters">
                 <div class="sidebar-menu">
                     <form id="categoryForm">
                         {% csrf_token %}
