@@ -1,6 +1,7 @@
 import django
 import random
-from django.shortcuts import render
+import json
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -10,15 +11,6 @@ from django.contrib.auth.hashers import check_password
 from datetime import date, datetime, timedelta
 from calendar import monthrange
 from django.http import JsonResponse
-import json
-
-
-import random
-from django.shortcuts import render
-
-from django.shortcuts import render, redirect
-from .models import Note
-from .forms import NoteForm
 
 from .models import *
 from .forms import *
@@ -106,12 +98,18 @@ def get_day_tasks_description_json(request, year, month, day):
     return JsonResponse({"tasks": tasks})
 
 
-@login_required()
-def index(request):
-    today = get_today(request)
+def music_playlist(request):
+    playlist = [
+        {'title': 'DoubleRainbow', 'artist': 'Artist 1', 'audio_url': '/static/audio/DoubleRainbow.mp3'},
+        {'title': 'HopeEmotional', 'artist': 'Artist 2', 'audio_url': '/static/audio/HopeEmotional.mp3'},
+        {'title': 'LateAtNight', 'artist': 'Artist 3', 'audio_url': '/static/audio/LateAtNight.mp3'},
+        {'title': 'Vibin', 'artist': 'Artist 4', 'audio_url': '/static/audio/Vibin.mp3'},
 
-    # Add the quote logic here
-    quotes = [
+    ]
+    return render(request, 'tasks/dashboard.html', {'playlist': playlist})
+
+
+quotes = [
         "Believe you can and you're halfway there.",
         "Your limitation—it's only your imagination.",
         "Push yourself, because no one else is going to do it for you.",
@@ -121,15 +119,18 @@ def index(request):
         "Don't stop when you're tired. Stop when you're done."
     ]
 
+
+@login_required()
+def index(request):
+    today = get_today(request)
     random_quote = random.choice(quotes)
 
-    # Handle Notes
-    note, created = Note.objects.get_or_create(user=request.user)  # Get or create user's note
+    note, created = Note.objects.get_or_create(user=request.user) 
     if request.method == "POST":
         form = NoteForm(request.POST, instance=note)
         if form.is_valid():
             form.save()
-            return redirect("index")  # Refresh the page after saving
+            return redirect("index") 
     else:
         form = NoteForm(instance=note)
 
@@ -141,23 +142,11 @@ def index(request):
         "calendarForm": calendarChoice(),
         "categoryForm": categoryChoice(),
         "TaskType": TaskType,
-        "quote": random_quote,  # Pass the random quote to the template
-        "note_form": form  # Pass the note form to the template
+        "quote": random_quote, 
+        "note_form": form
     }
 
     return render(request, "tasks/dashboard.html", context)
-
-def music_playlist(request):
-    playlist = [
-        {'title': 'DoubleRainbow', 'artist': 'Artist 1', 'audio_url': '/static/audio/DoubleRainbow.mp3'},
-        {'title': 'HopeEmotional', 'artist': 'Artist 2', 'audio_url': '/static/audio/HopeEmotional.mp3'},
-        {'title': 'LateAtNight', 'artist': 'Artist 3', 'audio_url': '/static/audio/LateAtNight.mp3'},
-        {'title': 'Vibin', 'artist': 'Artist 4', 'audio_url': '/static/audio/Vibin.mp3'},
-
-        print(playlist)
-    ]
-    return render(request, 'tasks/dashboard.html', {'playlist': playlist})
-
 
 
 def login(request):

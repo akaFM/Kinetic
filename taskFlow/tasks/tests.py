@@ -3,11 +3,11 @@ from django.test import TestCase, RequestFactory
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.http import JsonResponse
 from django.urls import reverse 
+from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
 from datetime import date, timedelta
-from django.utils import timezone
 
 from .models import Task, TaskType, RecurringPattern, User
 from .views import get_today, filter_tasks_by_category, group_tasks_by_day, validate_password, create_recurring_tasks, get_next_date, get_day_tasks_description_json, index, login, logout, create_task, complete_task, uncomplete_task, edit_tasks

@@ -7,6 +7,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
+
 class TaskType(models.TextChoices):
     GENERAL = "General"
     FUN = "Fun"
@@ -14,6 +15,7 @@ class TaskType(models.TextChoices):
     SCHOOL = "School"
     CHORE = "Chore"
     OTHER = "Other"
+
 
 class RecurringPattern(models.Model):
     class RepetitionPeriod(models.TextChoices):
@@ -31,6 +33,7 @@ class RecurringPattern(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Task(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -62,8 +65,9 @@ class Task(models.Model):
     def get_urgency(self):
         return self.recurring_pattern.urgency if self.recurring_pattern else self.urgency
 
+
 class Note(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="note")  # Each user has one note
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="note")
     content = models.TextField(blank=True)
 
     def __str__(self):
