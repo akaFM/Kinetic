@@ -16,7 +16,7 @@ function handleCalendarDayOnClick(event)
     if (target.tagName === 'TD' && target.textContent.trim() !== '')
     {
         const dayNumber  = target.cellIndex;
-        const dateNumber = target.textContent.trim();
+        const dateNumber = parseInt(target.textContent.trim(),10);
         const dayString  = getDay(dayNumber);
 
         // Creates(updates) day view pop up window with appropriate day info:

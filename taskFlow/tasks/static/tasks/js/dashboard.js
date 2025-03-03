@@ -9,7 +9,7 @@
         let calendarBody = "";
         let date = 1;
 
-        days_with_tasks = await get_days_with_tasks(targetDate.getFullYear(), targetDate.getMonth()+1);
+        let days_with_tasks = await get_days_with_tasks(targetDate.getFullYear(), targetDate.getMonth()+1);
 
         for (let i = 0; i < 6; i++) {
             let row = "<tr>";
