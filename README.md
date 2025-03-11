@@ -4,3 +4,4 @@ Description: Taskflow is a full-featured task management application designed to
 ```bash
 docker-compose up --build
 docker-compose exec web python manage.py test
+This allows the project to be run.
